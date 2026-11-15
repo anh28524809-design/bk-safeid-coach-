@@ -1,0 +1,3156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BK SafeID Coach – Trợ lý AI định hình an toàn số &amp; phòng chống mạo danh</title>
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & RESET (0 EXTERNAL CDNs - INSTANT LOAD < 0.2s)
+       ========================================================================== */
+    :root {
+      --navy-950: #070d1f;
+      --navy-900: #0f172a;
+      --navy-800: #1e293b;
+      --navy-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-300: #cbd5e1;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --white: #ffffff;
+      --teal-800: #115e59;
+      --teal-700: #0f766e;
+      --teal-600: #0d9488;
+      --teal-100: #ccfbf1;
+      --teal-50: #f0fdfa;
+      --blue-700: #1d4ed8;
+      --blue-50: #eff6ff;
+      --amber-700: #b45309;
+      --amber-500: #f59e0b;
+      --amber-100: #fef3c7;
+      --amber-50: #fffbeb;
+      --rose-700: #be123c;
+      --rose-600: #e11d48;
+      --rose-100: #ffe4e6;
+      --rose-50: #fff1f2;
+      --emerald-700: #047857;
+      --emerald-500: #10b981;
+      --emerald-100: #d1fae5;
+      --emerald-50: #ecfdf5;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
+      --shadow-xl: 0 20px 35px -10px rgba(7, 13, 31, 0.35);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--slate-100);
+      color: var(--navy-900);
+      line-height: 1.55;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    button, input, textarea, select {
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      transition: background-color 0.16s ease, border-color 0.16s ease, transform 0.1s ease, box-shadow 0.16s ease;
+    }
+
+    button:active {
+      transform: scale(0.99);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88em;
+      background: var(--slate-100);
+      color: var(--teal-800);
+      padding: 2px 6px;
+      border-radius: 5px;
+      border: 1px solid var(--slate-200);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ==========================================================================
+       2. LAYOUT & HEADER
+       ========================================================================== */
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .topbar-navy {
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 55%, #0d3b3e 100%);
+      color: var(--white);
+      padding: 12px 16px;
+    }
+
+    .container {
+      max-width: 1240px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .topbar-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(20, 184, 166, 0.18);
+      border: 1px solid rgba(94, 234, 212, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #5eead4;
+    }
+
+    .brand-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-title {
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--white);
+    }
+
+    .school-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(20, 184, 166, 0.2);
+      color: #99f6e4;
+      border: 1px solid rgba(94, 234, 212, 0.32);
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      margin-top: 2px;
+    }
+
+    .session-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill-metric {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #f1f5f9;
+      font-size: 0.78rem;
+    }
+
+    .pill-metric:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .pill-metric .sep {
+      color: #64748b;
+    }
+
+    .val-a { color: #7dd3fc; font-weight: 700; }
+    .val-b { color: #6ee7b7; font-weight: 700; }
+    .val-g { color: #fcd34d; font-weight: 700; }
+
+    .pill-code {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: rgba(15, 118, 110, 0.65);
+      border: 1px solid rgba(45, 212, 191, 0.45);
+      color: #ccfbf1;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .dot-live {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34d399;
+      display: inline-block;
+    }
+
+    .btn-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-header:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-header-key {
+      background: rgba(245, 158, 11, 0.16);
+      border-color: rgba(251, 191, 36, 0.4);
+      color: #fef3c7;
+    }
+
+    .btn-header-key:hover {
+      background: rgba(245, 158, 11, 0.26);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .status-dot.amber {
+      background-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+    }
+
+    .status-dot.green {
+      background-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-header-danger {
+      background: rgba(225, 29, 72, 0.85);
+      border-color: rgba(251, 113, 133, 0.4);
+    }
+
+    .btn-header-danger:hover {
+      background: var(--rose-600);
+    }
+
+    /* ==========================================================================
+       3. NAVIGATION TABS
+       ========================================================================== */
+    .nav-strip {
+      background: var(--white);
+      padding: 10px 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: max-content;
+    }
+
+    .nav-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      border-radius: 11px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--navy-700);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+    }
+
+    .nav-tab:hover {
+      background: var(--slate-100);
+      color: var(--navy-900);
+    }
+
+    .nav-tab.active {
+      background: var(--teal-700);
+      color: var(--white);
+      border-color: var(--teal-700);
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.24);
+    }
+
+    /* ==========================================================================
+       4. MAIN WORKSPACE & CARDS
+       ========================================================================== */
+    .main-wrap {
+      flex: 1;
+      padding: 20px 16px 32px;
+    }
+
+    .grid-12 {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .col-4 { grid-column: span 4; }
+    .col-5 { grid-column: span 5; }
+    .col-7 { grid-column: span 7; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+
+    @media (max-width: 960px) {
+      .col-4, .col-5, .col-7, .col-8 {
+        grid-column: span 12;
+      }
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stack-md > * + * { margin-top: 16px; }
+    .stack-sm > * + * { margin-top: 10px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .badge-teal { background: var(--teal-100); color: var(--teal-800); }
+    .badge-blue { background: var(--blue-50); color: var(--blue-700); border: 1px solid #bfdbfe; }
+    .badge-amber { background: var(--amber-100); color: var(--amber-700); }
+    .badge-emerald { background: var(--emerald-100); color: var(--emerald-700); }
+    .badge-rose { background: var(--rose-100); color: var(--rose-700); }
+    .badge-slate { background: var(--slate-100); color: var(--slate-600); }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin-top: 6px;
+    }
+
+    .section-desc {
+      font-size: 0.84rem;
+      color: var(--slate-600);
+      margin-top: 4px;
+    }
+
+    /* Buttons & Inputs */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      border-radius: var(--radius-md);
+      background: var(--teal-700);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.88rem;
+      box-shadow: 0 2px 6px rgba(15, 118, 110, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--teal-600);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: var(--slate-100);
+      border: 1px solid var(--slate-300);
+      color: var(--navy-800);
+      font-weight: 600;
+      font-size: 0.82rem;
+    }
+
+    .btn-secondary:hover {
+      background: var(--slate-200);
+    }
+
+    .btn-danger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      background: var(--rose-600);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.84rem;
+    }
+
+    .btn-danger:hover {
+      background: var(--rose-700);
+    }
+
+    .w-full { width: 100%; }
+
+    .input-field, .textarea-field {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: var(--radius-md);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-300);
+      color: var(--navy-900);
+      font-size: 0.88rem;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .input-field:focus, .textarea-field:focus {
+      outline: none;
+      border-color: var(--teal-700);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--navy-800);
+      margin-bottom: 6px;
+    }
+
+    /* ==========================================================================
+       5. TAB 1: MULTI-TURN CHAT INTERFACE
+       ========================================================================== */
+    .quick-btn {
+      width: 100%;
+      text-align: left;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      display: block;
+    }
+
+    .quick-btn:hover {
+      background: var(--teal-50);
+      border-color: #5eead4;
+    }
+
+    .quick-btn.urgent {
+      background: var(--rose-50);
+      border-color: #fecdd3;
+    }
+
+    .quick-btn.urgent:hover {
+      background: #ffe4e6;
+      border-color: #fda4af;
+    }
+
+    .quick-btn-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--teal-800);
+    }
+
+    .quick-btn.urgent .quick-btn-title {
+      color: var(--rose-700);
+    }
+
+    .quick-btn-sub {
+      font-size: 0.76rem;
+      color: var(--slate-600);
+      margin-top: 3px;
+    }
+
+    .info-box-teal {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: var(--teal-50);
+      border: 1px solid #99f6e4;
+      color: #134e4a;
+      font-size: 0.8rem;
+    }
+
+    .chat-panel {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      height: 74vh;
+      min-height: 540px;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 12px 16px;
+      background: var(--slate-50);
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .chat-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--teal-700);
+      color: var(--white);
+      font-weight: 800;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .msg-row.user {
+      justify-content: flex-end;
+    }
+
+    .msg-bubble {
+      max-width: 84%;
+      padding: 12px 15px;
+      border-radius: 16px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+
+    .msg-row.bot .msg-bubble {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      color: var(--navy-900);
+      border-top-left-radius: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .msg-row.user .msg-bubble {
+      background: var(--teal-700);
+      color: var(--white);
+      border-top-right-radius: 4px;
+    }
+
+    .msg-row.error .msg-bubble {
+      background: var(--rose-50);
+      border: 1px solid #fecdd3;
+      color: #881337;
+      border-top-left-radius: 4px;
+    }
+
+    .user-tag {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--teal-100);
+      color: var(--teal-800);
+      border: 1px solid #99f6e4;
+      font-size: 0.7rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pii-banner {
+      padding: 8px 14px;
+      background: var(--amber-50);
+      border-top: 1px solid #fde68a;
+      color: #78350f;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .chat-form {
+      padding: 12px;
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal-600);
+      animation: bounceDot 1.1s infinite ease-in-out;
+    }
+
+    .typing-dots span:nth-child(2) { animation-delay: 0.16s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.32s; }
+
+    @keyframes bounceDot {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+      40% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       6. MULTIMODAL DROPZONE & REPORTS (TABS 2, 3, 4)
+       ========================================================================== */
+    .dropzone {
+      display: block;
+      border: 2px dashed var(--slate-300);
+      border-radius: var(--radius-lg);
+      padding: 22px 16px;
+      text-align: center;
+      background: var(--slate-50);
+      cursor: pointer;
+      transition: border-color 0.16s ease, background-color 0.16s ease;
+    }
+
+    .dropzone:hover {
+      border-color: var(--teal-600);
+      background: var(--teal-50);
+    }
+
+    .preview-frame-box {
+      background: var(--navy-900);
+      border-radius: var(--radius-md);
+      padding: 10px;
+      text-align: center;
+    }
+
+    .preview-frame-box img {
+      max-height: 220px;
+      max-width: 100%;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    .frames-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 520px) {
+      .frames-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .frame-thumb {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--slate-300);
+      background: #000;
+    }
+
+    .frame-thumb img {
+      width: 100%;
+      height: 68px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .frame-tag {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: rgba(7, 13, 31, 0.85);
+      color: var(--white);
+      font-size: 0.66rem;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .risk-banner {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-weight: 800;
+      font-size: 0.88rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .risk-low {
+      background: var(--emerald-100);
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+
+    .risk-med {
+      background: var(--amber-100);
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+
+    .risk-high {
+      background: var(--rose-100);
+      color: #9f1239;
+      border: 1px solid #fda4af;
+    }
+
+    .report-body {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: var(--navy-900);
+    }
+
+    .safety-footer-note {
+      padding: 11px 14px;
+      border-radius: var(--radius-md);
+      background: var(--rose-50);
+      border: 1px solid #fecdd3;
+      color: #881337;
+      font-size: 0.78rem;
+    }
+
+    /* ==========================================================================
+       7. TAB 5: A-B-G ASSESSMENT & SCENARIOS (T1 - T8)
+       ========================================================================== */
+    .abg-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 720px) {
+      .abg-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .abg-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--slate-200);
+    }
+
+    .abg-card.sky { background: var(--blue-50); border-color: #bfdbfe; }
+    .abg-card.emerald { background: var(--emerald-50); border-color: #a7f3d0; }
+    .abg-card.amber { background: var(--amber-50); border-color: #fde68a; }
+
+    .abg-label {
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .abg-card.sky .abg-label { color: var(--blue-700); }
+    .abg-card.emerald .abg-label { color: var(--emerald-700); }
+    .abg-card.amber .abg-label { color: var(--amber-700); }
+
+    .abg-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--navy-900);
+      margin-top: 4px;
+    }
+
+    .abg-sub {
+      font-size: 0.75rem;
+      color: var(--slate-600);
+      margin-top: 4px;
+    }
+
+    .likert-row {
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .likert-text {
+      flex: 1 1 320px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--navy-800);
+    }
+
+    .likert-btns {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .likert-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: var(--white);
+      border: 1px solid var(--slate-300);
+      color: var(--navy-800);
+    }
+
+    .likert-btn:hover {
+      background: var(--teal-50);
+      border-color: var(--teal-600);
+    }
+
+    .likert-btn.selected {
+      background: var(--teal-700);
+      border-color: var(--teal-700);
+      color: var(--white);
+    }
+
+    .scenarios-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 820px) {
+      .scenarios-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .scenario-option {
+      width: 100%;
+      text-align: left;
+      padding: 11px 13px;
+      border-radius: 10px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      color: var(--navy-800);
+      font-size: 0.81rem;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    .scenario-option:hover {
+      background: var(--teal-50);
+      border-color: #5eead4;
+    }
+
+    .scenario-option.chosen {
+      background: var(--navy-900);
+      border-color: var(--navy-900);
+      color: var(--white);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       8. TAB 6: KNOWLEDGE, CHECKLIST & STUDY STATS
+       ========================================================================== */
+    .rule-4-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .rule-4-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .rule-step {
+      padding: 12px;
+      border-radius: var(--radius-md);
+      background: var(--teal-50);
+      border: 1px solid #99f6e4;
+      text-align: center;
+    }
+
+    .rule-step-title {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--teal-800);
+    }
+
+    .rule-step-sub {
+      font-size: 0.74rem;
+      color: var(--slate-600);
+      margin-top: 4px;
+    }
+
+    .habit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      cursor: pointer;
+    }
+
+    .habit-item:hover {
+      background: var(--teal-50);
+    }
+
+    .habit-item input[type="checkbox"] {
+      width: 17px;
+      height: 17px;
+      margin-top: 2px;
+      accent-color: var(--teal-700);
+      flex-shrink: 0;
+    }
+
+    .study-card-navy {
+      background: linear-gradient(145deg, var(--navy-950), var(--navy-900));
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .study-stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .study-stat-box {
+      padding: 12px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      text-align: center;
+    }
+
+    .study-stat-num {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #5eead4;
+    }
+
+    .study-stat-lbl {
+      font-size: 0.72rem;
+      color: #cbd5e1;
+      margin-top: 3px;
+    }
+
+    /* ==========================================================================
+       9. MODALS (ANONYMOUS LOGIN, API KEY SETTINGS, DELETE CONFIRM)
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: rgba(7, 13, 31, 0.76);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .modal-box {
+      max-width: 540px;
+      width: 100%;
+      background: var(--white);
+      border-radius: 20px;
+      border: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      margin: auto;
+    }
+
+    .modal-header-navy {
+      background: linear-gradient(135deg, var(--navy-950), var(--navy-900), #0f766e);
+      color: var(--white);
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-header-simple {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--slate-200);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .saved-codes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      max-height: 140px;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 480px) {
+      .saved-codes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .saved-code-btn {
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .saved-code-btn:hover {
+      background: var(--teal-50);
+      border-color: var(--teal-600);
+    }
+
+    .alert-box {
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .alert-amber {
+      background: var(--amber-50);
+      border: 1px solid #fde68a;
+      color: #78350f;
+    }
+
+    .alert-emerald {
+      background: var(--emerald-50);
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+
+    .alert-rose {
+      background: var(--rose-50);
+      border: 1px solid #fecdd3;
+      color: #881337;
+    }
+
+    .footer-bar {
+      background: var(--white);
+      border-top: 1px solid var(--slate-200);
+      padding: 14px 16px;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--slate-500);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       MODAL 1: ĐĂNG NHẬP & QUẢN LÝ MÃ ẨN DANH (KHÔNG THU DỮ LIỆU ĐỊNH DANH)
+       ======================================================================== -->
+  <div id="auth-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header-navy">
+        <div class="brand-logo" aria-hidden="true">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title-row">
+            <span class="brand-title">BK SafeID Coach</span>
+            <span class="school-badge">THPT Chuyên Bắc Kạn</span>
+          </div>
+          <p class="brand-sub">Trợ lý AI định hình an toàn số &amp; phòng chống mạo danh</p>
+        </div>
+      </div>
+
+      <div class="modal-body stack-md">
+        <div>
+          <h2 style="font-size: 1rem; font-weight: 800; color: var(--navy-900);">Bắt đầu phiên học tập bằng Mã ẩn danh</h2>
+          <p style="font-size: 0.82rem; color: var(--slate-600); margin-top: 4px;">
+            Hệ thống <strong>không yêu cầu họ tên thật, số điện thoại, CCCD hay email</strong>. Mỗi mã ẩn danh lưu riêng lịch sử trò chuyện, điểm Nhận thức (A), Hành vi (B) và Khoảng cách (G) trên trình duyệt của bạn.
+          </p>
+        </div>
+
+        <div>
+          <label for="anon-code-input" class="field-label">Nhập mã ẩn danh (Ví dụ: BK001, BK204):</label>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <input
+              id="anon-code-input"
+              type="text"
+              maxlength="16"
+              placeholder="Ví dụ: BK001"
+              onkeydown="if(event.key==='Enter'){event.preventDefault(); confirmAnonLogin();}"
+              class="input-field"
+              style="flex: 1 1 180px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;"
+            />
+            <button type="button" onclick="generateRandomAnonCode()" class="btn-secondary">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+              Tạo mã ngẫu nhiên
+            </button>
+          </div>
+          <p id="auth-error-text" class="hidden" style="color: var(--rose-600); font-size: 0.78rem; font-weight: 700; margin-top: 6px;"></p>
+        </div>
+
+        <div id="saved-codes-section" class="hidden stack-sm">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 0.76rem; font-weight: 700; color: var(--navy-800);">Hồ sơ mã ẩn danh đã lưu trên máy này:</span>
+            <span style="font-size: 0.72rem; color: var(--slate-500);">Tách biệt dữ liệu từng mã</span>
+          </div>
+          <div id="saved-codes-list" class="saved-codes-grid"></div>
+        </div>
+
+        <div class="alert-box alert-amber">
+          <strong>Nguyên tắc bảo mật:</strong> Tiến trình học tập được lưu cục bộ trong <code>localStorage</code> trên trình duyệt thiết bị này (không tự động đồng bộ qua mạng). Mã ẩn danh không phải mật khẩu; hệ thống không lưu OTP, mật khẩu thật hay tệp ảnh/video riêng tư.
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px;">
+          <button id="btn-keep-current-code" type="button" onclick="closeAuthModal()" class="btn-secondary hidden">
+            Giữ mã hiện tại
+          </button>
+          <button type="button" onclick="confirmAnonLogin()" class="btn-primary">
+            Bắt đầu trải nghiệm
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: CÀI ĐẶT & XOAY VÒNG GEMINI API KEY (CHỐNG LỖI 403 / 429)
+       ======================================================================== -->
+  <div id="apikey-modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <div class="modal-header-simple">
+        <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 0.95rem; color: var(--navy-900);">
+          <svg width="18" height="18" fill="none" stroke="var(--amber-700)" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
+          <span>Cài đặt &amp; Xoay vòng Gemini API Key</span>
+        </div>
+        <button type="button" onclick="closeApiKeyModal()" style="font-weight: 800; color: var(--slate-500); padding: 4px 8px;">✕</button>
+      </div>
+
+      <div class="modal-body stack-md">
+        <div style="font-size: 0.82rem; color: var(--slate-600); line-height: 1.55;">
+          <p>• Để tránh bị Google tự động khóa khóa API (<strong>lỗi 403</strong>) khi xuất bản trên GitHub Pages, hệ thống <strong>không nhúng sẵn API Key trong mã nguồn</strong>.</p>
+          <p style="margin-top: 6px;">• Bạn có thể dán <strong>1 hoặc nhiều Gemini API Key</strong> (mỗi dòng 1 key, tạo miễn phí tại <code>aistudio.google.com</code>). Nếu một key hết 20 lượt miễn phí/ngày (<strong>lỗi 429</strong>), hệ thống tự động xoay vòng sang key kế tiếp!</p>
+        </div>
+
+        <div>
+          <label for="apikey-textarea" class="field-label">Danh sách Gemini API Key (Mỗi dòng 1 Key):</label>
+          <textarea
+            id="apikey-textarea"
+            rows="4"
+            placeholder="AIzaSy... (Key 1)&#10;AIzaSy... (Key 2 dự phòng)"
+            class="textarea-field"
+            style="font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem;"
+          ></textarea>
+        </div>
+
+        <div id="apikey-feedback" class="alert-box hidden"></div>
+
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;">
+          <button type="button" onclick="clearAllApiKeys()" class="btn-secondary">
+            Xóa tất cả Key
+          </button>
+          <div style="display: flex; gap: 8px;">
+            <button type="button" onclick="closeApiKeyModal()" class="btn-secondary">Đóng</button>
+            <button type="button" id="btn-save-test-key" onclick="saveAndTestApiKeys()" class="btn-primary">
+              Lưu &amp; Kiểm tra kết nối
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: XÁC NHẬN XÓA DỮ LIỆU TIẾN TRÌNH CỦA MÃ ẨN DANH
+       ======================================================================== -->
+  <div id="delete-modal" class="modal-backdrop hidden">
+    <div class="modal-box" style="max-width: 460px;">
+      <div class="modal-header-simple">
+        <span style="font-weight: 800; font-size: 0.95rem; color: var(--rose-700);">Xóa dữ liệu tiến trình trên trình duyệt</span>
+        <button type="button" onclick="closeDeleteModal()" style="font-weight: 800; color: var(--slate-500); padding: 4px 8px;">✕</button>
+      </div>
+      <div class="modal-body stack-md">
+        <p style="font-size: 0.84rem; color: var(--navy-800);">
+          Bạn sắp xóa toàn bộ dữ liệu của mã ẩn danh <strong id="delete-target-code">---</strong> lưu trong <code>localStorage</code> của trình duyệt này, bao gồm:
+        </p>
+        <ul style="font-size: 0.8rem; color: var(--slate-600); padding-left: 20px; line-height: 1.6;">
+          <li>Toàn bộ lịch sử trò chuyện tư vấn của mã này.</li>
+          <li>Kết quả khảo sát Nhận thức (điểm A) và 8 tình huống thực hành T1–T8 (điểm B, khoảng cách G).</li>
+          <li>Tiến trình đánh dấu thử thách thay đổi hành vi.</li>
+        </ul>
+        <p style="font-size: 0.76rem; color: var(--slate-500);">* Dữ liệu của các mã ẩn danh khác (nếu có) và danh sách API Key đã lưu sẽ được giữ nguyên.</p>
+        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+          <button type="button" onclick="closeDeleteModal()" class="btn-secondary">Hủy bỏ</button>
+          <button type="button" onclick="executeDeleteCurrentProfile()" class="btn-danger">Xóa dữ liệu mã này</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MAIN APP SHELL
+       ======================================================================== -->
+  <div class="app-shell">
+    <!-- TOP HEADER -->
+    <header class="topbar">
+      <div class="topbar-navy">
+        <div class="container topbar-inner">
+          <div class="brand">
+            <div class="brand-logo" aria-hidden="true">
+              <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="brand-title-row">
+                <span class="brand-title">BK SafeID Coach</span>
+                <span class="school-badge">THPT Chuyên Bắc Kạn</span>
+              </div>
+              <p class="brand-sub">Trợ lý AI định hình an toàn số &amp; phòng chống mạo danh cho học sinh THPT</p>
+            </div>
+          </div>
+
+          <div class="session-controls">
+            <!-- Honest A - B - G Live Status -->
+            <button type="button" onclick="switchTab('tab-practice')" class="pill-metric" title="Xem chi tiết hoặc làm bài đánh giá chỉ số A - B - G">
+              <span>A: <span id="top-val-a" class="val-a">Chưa đánh giá</span></span>
+              <span class="sep">|</span>
+              <span>B: <span id="top-val-b" class="val-b">Chưa đánh giá</span></span>
+              <span class="sep">|</span>
+              <span>G: <span id="top-val-g" class="val-g">Chưa đánh giá</span></span>
+            </button>
+
+            <!-- Active Anonymous Code -->
+            <div class="pill-code">
+              <span class="dot-live"></span>
+              <span>Mã: <strong id="top-anon-code" style="color: #ffffff;">---</strong></span>
+            </div>
+
+            <!-- API Key Config Button with Status Dot -->
+            <button type="button" onclick="openApiKeyModal()" class="btn-header btn-header-key">
+              <span id="key-status-dot" class="status-dot amber"></span>
+              <span id="key-status-label">🔑 Cài đặt API Key</span>
+            </button>
+
+            <!-- Switch Code / Logout -->
+            <button type="button" onclick="openAuthModalForSwitch()" class="btn-header">
+              ⇄ Đổi mã / Đăng xuất
+            </button>
+
+            <!-- Clear Profile Data -->
+            <button type="button" onclick="openDeleteModal()" class="btn-header btn-header-danger">
+              🗑️ Xóa dữ liệu
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 NAVIGATION TABS -->
+      <nav class="nav-strip" aria-label="Chức năng chính">
+        <div class="container nav-list">
+          <button type="button" id="nav-tab-chat" onclick="switchTab('tab-chat')" class="nav-tab active">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg>
+            1. Trò chuyện an toàn số
+          </button>
+          <button type="button" id="nav-tab-image" onclick="switchTab('tab-image')" class="nav-tab">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+            2. Kiểm tra hình ảnh
+          </button>
+          <button type="button" id="nav-tab-video" onclick="switchTab('tab-video')" class="nav-tab">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"/></svg>
+            3. Kiểm tra video Deepfake
+          </button>
+          <button type="button" id="nav-tab-audio" onclick="switchTab('tab-audio')" class="nav-tab">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
+            4. Phân tích âm thanh
+          </button>
+          <button type="button" id="nav-tab-practice" onclick="switchTab('tab-practice')" class="nav-tab">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            5. Luyện tập &amp; Đánh giá A–B–G
+          </button>
+          <button type="button" id="nav-tab-knowledge" onclick="switchTab('tab-knowledge')" class="nav-tab">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+            6. Kho kiến thức &amp; Thử thách
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-wrap">
+      <div class="container">
+
+        <!-- ==================================================================
+             TAB 1: TRÒ CHUYỆN AN TOÀN SỐ THÔNG MINH
+             ================================================================== -->
+        <section id="tab-chat" class="grid-12">
+          <!-- Left Sidebar -->
+          <div class="col-4 stack-md">
+            <div class="card stack-sm">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--slate-500);">Tình huống kiểm thử nhanh</span>
+                <span style="font-size: 0.72rem; font-weight: 700; color: var(--teal-700);">Bấm để gửi thử</span>
+              </div>
+
+              <button type="button" onclick="sendQuickChat('Tôi lỡ đăng ảnh có số CCCD lên story thì phải làm sao?')" class="quick-btn">
+                <div class="quick-btn-title">Lộ ảnh CCCD trên mạng xã hội</div>
+                <div class="quick-btn-sub">"Tôi lỡ đăng ảnh có số CCCD lên story thì phải làm sao?"</div>
+              </button>
+
+              <button type="button" onclick="sendQuickChat('Em vừa lỡ đọc mã OTP 6 số cho người lạ tự xưng cán bộ hỗ trợ rồi, phải làm sao ạ?')" class="quick-btn urgent">
+                <div class="quick-btn-title">Khẩn cấp: Lộ mã OTP</div>
+                <div class="quick-btn-sub">"Em vừa lỡ đọc mã OTP 6 số cho người lạ..."</div>
+              </button>
+
+              <button type="button" onclick="sendQuickChat('Có người nhắn tin báo em trúng học bổng và giục gửi mã OTP trong vòng 5 phút kẻo hủy suất, có nên gửi không?')" class="quick-btn">
+                <div class="quick-btn-title">Bẫy OTP học bổng 5 phút (Tình huống T4)</div>
+                <div class="quick-btn-sub">Tình huống điểm gãy hành vi từ khảo sát N=357</div>
+              </button>
+
+              <button type="button" onclick="sendQuickChat('Bạn thân nhắn Zalo vay tiền gấp, gọi video 3 giây thấy mặt nhưng mờ và rè tiếng rồi tắt. Mình nên xử lý thế nào?')" class="quick-btn">
+                <div class="quick-btn-title">Bạn thân nhắn vay tiền Zalo (Nghi Deepfake)</div>
+                <div class="quick-btn-sub">"Gọi video 3 giây thấy mặt mờ rồi tắt..."</div>
+              </button>
+
+              <button type="button" onclick="sendQuickChat('Hướng dẫn mình cách bật xác thực 2 bước (2FA) trên Facebook và Zalo')" class="quick-btn">
+                <div class="quick-btn-title">Cách bật xác thực 2 bước (2FA)</div>
+                <div class="quick-btn-sub">"Hướng dẫn bật 2FA trên Facebook và Zalo"</div>
+              </button>
+            </div>
+
+            <div class="info-box-teal stack-sm">
+              <div style="font-weight: 800; color: var(--teal-800);">Cơ chế hội thoại thông minh &amp; Bảo mật</div>
+              <p>• <strong>Ghi nhớ ngữ cảnh đa lượt:</strong> Bạn có thể trả lời ngắn như <em>"rồi"</em>, <em>"chưa"</em>, <em>"tiếp theo làm gì?"</em> — trợ lý sẽ dẫn dắt tiếp theo đúng mạch câu chuyện của mã <strong id="sidebar-code">---</strong>.</p>
+              <p>• <strong>Tự động ẩn dữ liệu nhạy cảm:</strong> Số CCCD (12 số), SĐT (10 số), mã OTP và mật khẩu được che thành <code>[ĐÃ ẨN]</code> trước khi gửi tới AI.</p>
+            </div>
+          </div>
+
+          <!-- Right Chat Panel -->
+          <div class="col-8">
+            <div class="chat-panel">
+              <div class="chat-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <div class="chat-avatar">AI</div>
+                  <div>
+                    <div style="font-size: 0.9rem; font-weight: 700; color: var(--navy-900);">Trợ lý Tư vấn An toàn số BK SafeID Coach</div>
+                    <div style="font-size: 0.74rem; color: var(--slate-500);">
+                      Phiên của mã: <strong id="chat-code-label" style="color: var(--teal-700);">---</strong> • Phản hồi nhanh 2–4 giây
+                    </div>
+                  </div>
+                </div>
+                <button type="button" onclick="resetCurrentChat()" class="btn-secondary" style="padding: 6px 12px; font-size: 0.76rem;">
+                  Làm mới hội thoại
+                </button>
+              </div>
+
+              <div id="chat-feed" class="chat-messages"></div>
+
+              <div id="pii-warning-strip" class="pii-banner hidden">
+                <span><strong>Bảo vệ dữ liệu cá nhân:</strong> Hệ thống đã tự động che số CCCD / SĐT / OTP / mật khẩu trước khi gửi lên AI.</span>
+                <button type="button" onclick="document.getElementById('pii-warning-strip').classList.add('hidden')" style="font-weight: 800;">✕</button>
+              </div>
+
+              <form onsubmit="submitChatMessage(event)" class="chat-form">
+                <input
+                  id="chat-input"
+                  type="text"
+                  autocomplete="off"
+                  placeholder="Nhập câu hỏi hoặc tình huống (ví dụ: Lỡ đăng ảnh có số CCCD thì sao?)..."
+                  class="input-field"
+                />
+                <button type="submit" id="chat-send-btn" class="btn-primary" style="flex-shrink: 0;">
+                  Gửi
+                  <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 2: KIỂM TRA HÌNH ẢNH NGHI GIẢ MẠO
+             ================================================================== -->
+        <section id="tab-image" class="grid-12 hidden">
+          <div class="col-5 card stack-md">
+            <div>
+              <span class="badge badge-teal">Chức năng 2 • Phân tích thị giác</span>
+              <h2 class="section-title">Kiểm tra hình ảnh nghi giả mạo / lộ dữ liệu</h2>
+              <p class="section-desc">
+                Tải ảnh trực tiếp để kiểm tra dấu hiệu bất thường trên khuôn mặt, ánh sáng, chi tiết thiếu nhất quán hoặc phát hiện thông tin nhạy cảm (CCCD, mã QR) trước khi đăng.
+              </p>
+            </div>
+
+            <label for="image-file-input" class="dropzone">
+              <div style="font-weight: 700; font-size: 0.86rem; color: var(--navy-900);">Bấm chọn ảnh (JPG, PNG, WEBP)</div>
+              <div style="font-size: 0.76rem; color: var(--slate-500); margin-top: 4px;">Tối đa 10MB • Xử lý tạm thời trên RAM, không lưu trữ lâu dài</div>
+              <input type="file" id="image-file-input" accept="image/jpeg,image/png,image/webp" onchange="handleImageUpload(event)" class="hidden" />
+            </label>
+
+            <div id="image-preview-wrap" class="preview-frame-box hidden">
+              <img id="image-preview-img" alt="Ảnh tải lên" />
+              <div id="image-meta-text" style="font-size: 0.74rem; color: #cbd5e1; margin-top: 6px;"></div>
+            </div>
+
+            <div>
+              <label for="image-note-input" class="field-label">Bối cảnh nhận được hoặc dự định đăng ảnh (tùy chọn):</label>
+              <textarea id="image-note-input" rows="2" placeholder="Ví dụ: Ảnh này tài khoản lạ gửi qua Messenger, hoặc ảnh giấy khen em định đăng lên story..." class="textarea-field"></textarea>
+            </div>
+
+            <button type="button" id="btn-run-image" onclick="runImageAnalysis()" class="btn-primary w-full">
+              Phân tích hình ảnh &amp; Đánh giá nguy cơ
+            </button>
+          </div>
+
+          <div class="col-7 card stack-md">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--slate-200); padding-bottom: 12px;">
+              <h3 style="font-size: 0.96rem; font-weight: 700;">Báo cáo kiểm tra hình ảnh (Chuẩn 5 mục)</h3>
+              <span class="badge badge-slate">Không khẳng định võ đoán</span>
+            </div>
+            <div id="image-result-box">
+              <div class="report-body stack-sm" style="color: var(--slate-600); font-size: 0.82rem;">
+                <strong style="color: var(--navy-900);">Cấu trúc báo cáo 5 phần:</strong>
+                <p>1. <strong>Loại nội dung:</strong> Mô tả đối tượng, văn bản hoặc bối cảnh xuất hiện trong ảnh.</p>
+                <p>2. <strong>Dấu hiệu phát hiện:</strong> Chi tiết bất thường về khuôn mặt/ánh sáng nghi AI hoặc thông tin định danh/mã QR bị lộ.</p>
+                <p>3. <strong>Mức độ nguy cơ:</strong> Phân loại rõ 3 mức (Thấp / Trung bình / Cao).</p>
+                <p>4. <strong>Giới hạn của phân tích:</strong> Nêu rõ phạm vi nhận diện thị giác, không thay thế giám định pháp y.</p>
+                <p>5. <strong>Khuyến nghị hành động:</strong> Các bước xác minh nguồn gốc hoặc che thông tin an toàn.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 3: KIỂM TRA VIDEO DEEPFAKE (HTML5 CANVAS EXTRACT 4 FRAMES)
+             ================================================================== -->
+        <section id="tab-video" class="grid-12 hidden">
+          <div class="col-5 card stack-md">
+            <div>
+              <span class="badge badge-blue">Chức năng 3 • Trích xuất khung hình Canvas</span>
+              <h2 class="section-title">Kiểm tra Video Deepfake</h2>
+              <p class="section-desc">
+                Tải video trực tiếp lên trình duyệt. Hệ thống tự động cắt <strong>4 khung hình quan trọng tại mốc 15%, 40%, 65% và 85%</strong> thời lượng để phân tích khuôn mặt, ánh sáng và dấu hiệu ghép mặt AI.
+              </p>
+            </div>
+
+            <label for="video-file-input" class="dropzone">
+              <div style="font-weight: 700; font-size: 0.86rem; color: var(--navy-900);">Tải tệp Video (MP4, WEBM)</div>
+              <div style="font-size: 0.76rem; color: var(--slate-500); margin-top: 4px;">Trích xuất khung hình trực tiếp trên trình duyệt • Giải phóng bộ nhớ ngay sau khi kiểm tra</div>
+              <input type="file" id="video-file-input" accept="video/mp4,video/webm,video/quicktime" onchange="handleVideoUpload(event)" class="hidden" />
+            </label>
+
+            <video id="video-player" controls class="hidden" style="width: 100%; max-height: 200px; border-radius: 12px; background: #000;"></video>
+
+            <div id="video-frames-section" class="hidden">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.78rem; font-weight: 700; color: var(--navy-800);">
+                <span>4 khung hình quan trọng đã trích xuất:</span>
+                <span id="video-duration-label" style="color: var(--teal-700);"></span>
+              </div>
+              <div id="video-frames-grid" class="frames-grid"></div>
+            </div>
+
+            <div>
+              <label for="video-note-input" class="field-label">Mô tả bối cảnh hoặc lời nói trong video (nếu có):</label>
+              <textarea id="video-note-input" rows="2" placeholder="Ví dụ: Cuộc gọi video 4 giây qua Messenger bảo chuyển tiền gấp vào tài khoản lạ..." class="textarea-field"></textarea>
+            </div>
+
+            <button type="button" id="btn-run-video" onclick="runVideoAnalysis()" class="btn-primary w-full">
+              Phân tích 4 khung hình &amp; Cảnh báo Deepfake
+            </button>
+          </div>
+
+          <div class="col-7 card stack-md">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--slate-200); padding-bottom: 12px;">
+              <h3 style="font-size: 0.96rem; font-weight: 700;">Báo cáo kiểm tra Video Deepfake (Chuẩn 5 mục)</h3>
+              <span class="badge badge-blue">Xử lý trực tiếp trên trình duyệt</span>
+            </div>
+            <div id="video-result-box">
+              <div class="report-body stack-sm" style="color: var(--slate-600); font-size: 0.82rem;">
+                <strong style="color: var(--navy-900);">Quy trình kiểm tra video thực tế:</strong>
+                <p>1. Trình duyệt dùng HTML5 <code>&lt;video&gt;</code> và <code>&lt;canvas&gt;</code> trích xuất 4 khung hình đại diện tại 15%, 40%, 65%, 85% thời lượng.</p>
+                <p>2. Gửi đồng thời 4 khung hình JPEG sang mô hình thị giác Gemini để đối chiếu độ nhất quán khuôn mặt, đường viền hàm/cổ, ánh sáng và biểu cảm giữa các mốc thời gian.</p>
+                <p>3. Trả về báo cáo chuẩn 5 mục kèm mức độ nguy cơ (Thấp / Trung bình / Cao) và hướng dẫn xác minh độc lập.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 4: PHÂN TÍCH GIỌNG NÓI & ÂM THANH
+             ================================================================== -->
+        <section id="tab-audio" class="grid-12 hidden">
+          <div class="col-5 card stack-md">
+            <div>
+              <span class="badge badge-teal">Chức năng 4 • Gỡ băng &amp; Nhận diện kịch bản</span>
+              <h2 class="section-title">Phân tích giọng nói &amp; âm thanh</h2>
+              <p class="section-desc">
+                Tải tệp ghi âm (MP3, WAV, M4A, OGG) hoặc video có tiếng. AI chuyển lời nói tiếng Việt thành văn bản và <strong>tách bạch nguy cơ lừa đảo trong nội dung với dấu hiệu giọng nói tổng hợp AI</strong>.
+              </p>
+            </div>
+
+            <label for="audio-file-input" class="dropzone">
+              <div style="font-weight: 700; font-size: 0.86rem; color: var(--navy-900);">Tải tệp âm thanh hoặc video có tiếng</div>
+              <div style="font-size: 0.76rem; color: var(--slate-500); margin-top: 4px;">Hỗ trợ MP3, WAV, M4A, OGG, MP4 (Tối đa 15MB)</div>
+              <input type="file" id="audio-file-input" accept="audio/*,video/*" onchange="handleAudioUpload(event)" class="hidden" />
+            </label>
+
+            <audio id="audio-player" controls class="hidden" style="width: 100%;"></audio>
+            <div id="audio-status-box" class="alert-box alert-emerald hidden"></div>
+
+            <div>
+              <label for="audio-note-input" class="field-label">Bối cảnh cuộc gọi / tin nhắn thoại (hoặc nội dung lời nói):</label>
+              <textarea id="audio-note-input" rows="2" placeholder="Ví dụ: Tin nhắn thoại từ Zalo người quen hỏi mượn tiền gấp hoặc cuộc gọi báo trúng học bổng đòi mã OTP..." class="textarea-field"></textarea>
+            </div>
+
+            <button type="button" id="btn-run-audio" onclick="runAudioAnalysis()" class="btn-primary w-full">
+              Gỡ băng tiếng Việt &amp; Phân tích nguy cơ
+            </button>
+          </div>
+
+          <div class="col-7 card stack-md">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--slate-200); padding-bottom: 12px;">
+              <h3 style="font-size: 0.96rem; font-weight: 700;">Báo cáo phân tích Âm thanh &amp; Lời nói (Chuẩn 5 mục)</h3>
+              <span class="badge badge-teal">Tách bạch Nội dung vs. Giọng AI</span>
+            </div>
+            <div id="audio-result-box">
+              <div class="report-body stack-sm" style="color: var(--slate-600); font-size: 0.82rem;">
+                <strong style="color: var(--navy-900);">Nguyên tắc phân tích âm thanh trung thực:</strong>
+                <p>1. <strong>Gỡ băng tiếng Việt:</strong> Chuyển lời thoại trong tệp âm thanh/video thành văn bản rõ ràng.</p>
+                <p>2. <strong>Tách bạch 2 lớp dấu hiệu:</strong> Phân biệt rõ <em>nguy cơ kịch bản lừa đảo trong nội dung</em> (thúc ép chuyển tiền, đòi OTP, đe dọa) với <em>bằng chứng âm học về giọng nói tổng hợp AI</em>.</p>
+                <p>3. Khi chất lượng ghi âm thấp hoặc thiếu dữ liệu, hệ thống nêu rõ giới hạn thay vì kết luận sai.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 5: LUYỆN TẬP TÌNH HUỐNG & ĐÁNH GIÁ A - B - G
+             ================================================================== -->
+        <section id="tab-practice" class="stack-md hidden">
+          <!-- Honest A-B-G Dashboard -->
+          <div class="card stack-md">
+            <div>
+              <span class="badge badge-teal">Hồ sơ mã ẩn danh: <span id="practice-code-tag">---</span></span>
+              <h2 class="section-title">Bảng điều khiển Nhận thức (A) – Hành vi (B) – Khoảng cách (G = A − B)</h2>
+              <p class="section-desc">
+                Điểm số chỉ được tính từ bài đánh giá thực tế của bạn bên dưới. Khi chưa hoàn thành bài kiểm tra, hệ thống hiển thị trung thực <strong>"Chưa đánh giá"</strong> (tuyệt đối không dùng số liệu giả định).
+              </p>
+            </div>
+
+            <div class="abg-grid">
+              <div class="abg-card sky">
+                <div class="abg-label">Nhận thức (A – Awareness)</div>
+                <div id="dash-val-a" class="abg-value">Chưa đánh giá</div>
+                <div id="dash-sub-a" class="abg-sub">Hoàn thành 8 câu đánh giá nhận thức B1–B8</div>
+              </div>
+              <div class="abg-card emerald">
+                <div class="abg-label">Hành vi (B – Behavior)</div>
+                <div id="dash-val-b" class="abg-value">Chưa đánh giá</div>
+                <div id="dash-sub-b" class="abg-sub">Đã thực hành: 0/8 tình huống T1–T8</div>
+              </div>
+              <div class="abg-card amber">
+                <div class="abg-label">Khoảng cách (G = A − B)</div>
+                <div id="dash-val-g" class="abg-value">Chưa đánh giá</div>
+                <div id="dash-sub-g" class="abg-sub">Hiển thị khi đã có đủ cả điểm A và điểm B</div>
+              </div>
+            </div>
+
+            <div id="dash-interpretation" class="alert-box" style="background: var(--slate-50); border: 1px solid var(--slate-200); color: var(--navy-800);">
+              Hãy hoàn thành <strong>Phần 1 (8 câu Nhận thức B1–B8)</strong> và <strong>Phần 2 (8 tình huống thực tế T1–T8)</strong> để hệ thống đo chính xác khoảng cách giữa nhận thức và hành vi của bạn.
+            </div>
+          </div>
+
+          <!-- PART 1: AWARENESS SURVEY B1-B8 -->
+          <div class="card stack-md">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--slate-200); padding-bottom: 12px;">
+              <div>
+                <h3 style="font-size: 0.98rem; font-weight: 700;">Phần 1: Đánh giá Nhận thức an toàn số (B1–B8) – Tính điểm A</h3>
+                <p style="font-size: 0.78rem; color: var(--slate-600); margin-top: 2px;">
+                  Chọn mức độ đồng ý từ <strong>1 (Hoàn toàn không đồng ý)</strong> đến <strong>5 (Hoàn toàn đồng ý)</strong>. Công thức: <code>A = [(Điểm TB − 1) / 4] × 100</code>.
+                </p>
+              </div>
+              <span id="awareness-badge" class="badge badge-slate">Chưa đánh giá</span>
+            </div>
+
+            <div id="awareness-list" class="stack-sm"></div>
+
+            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;">
+              <span id="awareness-msg" style="font-size: 0.8rem; font-weight: 700;"></span>
+              <button type="button" onclick="saveAwarenessScore()" class="btn-primary">
+                Lưu kết quả Nhận thức &amp; Tính điểm A
+              </button>
+            </div>
+          </div>
+
+          <!-- PART 2: 8 SCENARIOS T1-T8 -->
+          <div class="card" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;">
+            <div>
+              <h3 style="font-size: 0.98rem; font-weight: 700;">Phần 2: Luyện tập 8 tình huống thực tế THPT (T1–T8) – Tính điểm B</h3>
+              <p style="font-size: 0.78rem; color: var(--slate-600); margin-top: 2px;">
+                Chấm điểm theo Rubric chuẩn hóa (0, 1 hoặc 2 điểm/tình huống). Điểm hành vi: <code>B = (Tổng điểm / 16) × 100</code>.
+              </p>
+            </div>
+            <button type="button" onclick="resetScenarios()" class="btn-secondary">
+              Làm lại 8 tình huống
+            </button>
+          </div>
+
+          <div id="scenarios-container" class="scenarios-grid"></div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 6: KHO KIẾN THỨC, THỬ THÁCH HÀNH VI & KẾT QUẢ NGHIÊN CỨU
+             ================================================================== -->
+        <section id="tab-knowledge" class="grid-12 hidden">
+          <div class="col-7 stack-md">
+            <div class="card stack-md">
+              <div>
+                <span class="badge badge-teal">Cẩm nang kỹ năng số THPT</span>
+                <h2 class="section-title">Quy tắc 4 bước &amp; Nhận diện mạo danh AI</h2>
+              </div>
+
+              <div class="rule-4-grid">
+                <div class="rule-step">
+                  <div class="rule-step-title">1. DỪNG</div>
+                  <div class="rule-step-sub">Chậm lại 5 giây trước mọi tin nhắn hối thúc</div>
+                </div>
+                <div class="rule-step">
+                  <div class="rule-step-title">2. KIỂM TRA</div>
+                  <div class="rule-step-sub">Soi kỹ số CCCD, mã QR, tên miền đường link</div>
+                </div>
+                <div class="rule-step">
+                  <div class="rule-step-title">3. ĐÁNH GIÁ</div>
+                  <div class="rule-step-sub">Gọi điện thoại độc lập qua số đã lưu</div>
+                </div>
+                <div class="rule-step">
+                  <div class="rule-step-title">4. CHIA SẺ</div>
+                  <div class="rule-step-sub">Chỉ đăng khi đã che thông tin định danh</div>
+                </div>
+              </div>
+
+              <div class="scenarios-grid">
+                <div style="padding: 14px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-200);">
+                  <div style="font-weight: 700; font-size: 0.85rem; color: var(--navy-900);">Deepfake Video &amp; Giọng nói AI</div>
+                  <p style="font-size: 0.78rem; color: var(--slate-600); margin-top: 6px;">
+                    Kẻ gian thường gọi video rất ngắn (3–5 giây), hình mờ, khẩu hình lệch tiếng rồi cúp máy viện cớ mất sóng, sau đó nhắn tin mượn tiền. Giọng nói AI có thể sao chép từ đoạn ghi âm công khai nhưng thường thiếu ngữ điệu tự nhiên.
+                  </p>
+                </div>
+                <div style="padding: 14px; border-radius: 12px; background: var(--slate-50); border: 1px solid var(--slate-200);">
+                  <div style="font-weight: 700; font-size: 0.85rem; color: var(--navy-900);">Bảo vệ CCCD, Mã QR &amp; OTP</div>
+                  <p style="font-size: 0.78rem; color: var(--slate-600); margin-top: 6px;">
+                    Không đăng ảnh thẻ CCCD, giấy khen, vé sự kiện có mã QR ở chế độ công khai. Tuyệt đối không đọc mã OTP 6 số cho bất kỳ ai kể cả người tự xưng cán bộ ngân hàng, công an hay giáo viên.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive Behavior Change Checklist -->
+            <div class="card stack-sm">
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <h3 style="font-size: 0.96rem; font-weight: 700;">Lộ trình thử thách thay đổi hành vi an toàn số</h3>
+                <span id="challenge-badge" class="badge badge-emerald">0/5 hoàn thành</span>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--slate-600);">Đánh dấu các hành động thực tế bạn đã áp dụng (lưu riêng theo mã ẩn danh hiện tại):</p>
+
+              <label class="habit-item">
+                <input type="checkbox" id="chk-habit-0" onchange="toggleHabit(0)" />
+                <div style="font-size: 0.8rem;">
+                  <strong>Ngày 1 – Khóa thông tin định danh:</strong> Ẩn ngày sinh, số điện thoại và danh sách bạn bè trên Facebook/Zalo về chế độ <em>Bạn bè</em> hoặc <em>Chỉ mình tôi</em>.
+                </div>
+              </label>
+
+              <label class="habit-item">
+                <input type="checkbox" id="chk-habit-1" onchange="toggleHabit(1)" />
+                <div style="font-size: 0.8rem;">
+                  <strong>Ngày 2 – Rà soát ảnh &amp; mã QR cũ:</strong> Kiểm tra trang cá nhân và ẩn/xóa các ảnh lộ số CCCD, thẻ học sinh hoặc vé sự kiện chứa mã QR.
+                </div>
+              </label>
+
+              <label class="habit-item">
+                <input type="checkbox" id="chk-habit-2" onchange="toggleHabit(2)" />
+                <div style="font-size: 0.8rem;">
+                  <strong>Ngày 3 – Bật xác thực 2 bước (2FA):</strong> Kích hoạt bảo mật 2 lớp cho tài khoản mạng xã hội và email chính.
+                </div>
+              </label>
+
+              <label class="habit-item">
+                <input type="checkbox" id="chk-habit-3" onchange="toggleHabit(3)" />
+                <div style="font-size: 0.8rem;">
+                  <strong>Tuần 2–4 – Quy ước xác minh gia đình:</strong> Thống nhất với bố mẹ và bạn thân quy tắc gọi điện thoại trực tiếp trước mọi yêu cầu chuyển tiền.
+                </div>
+              </label>
+
+              <label class="habit-item">
+                <input type="checkbox" id="chk-habit-4" onchange="toggleHabit(4)" />
+                <div style="font-size: 0.8rem;">
+                  <strong>Tuần 5–6 – Kiểm soát quyền ứng dụng AI:</strong> Thu hồi quyền truy cập album ảnh/tài khoản của các web chế ảnh AI lạ không rõ nguồn gốc.
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Right Column: Research Study Summary & Privacy Disclosure -->
+          <div class="col-5 stack-md">
+            <div class="study-card-navy stack-sm">
+              <span class="school-badge">Dữ liệu thực nghiệm đề tài KHKT</span>
+              <h3 style="font-size: 1rem; font-weight: 800; margin-top: 8px;">Kết quả nghiên cứu tại THPT Chuyên Bắc Kạn</h3>
+              <p style="font-size: 0.78rem; color: #cbd5e1;">
+                Đề tài: <em>"Nghiên cứu khoảng cách nhận thức – hành vi về nguy cơ AI mạo danh và xây dựng trợ lý AI định hình an toàn số cho học sinh THPT tại phường Bắc Kạn"</em>.
+              </p>
+
+              <div class="study-stat-row">
+                <div class="study-stat-box">
+                  <div class="study-stat-num">N = 317</div>
+                  <div class="study-stat-lbl">Khảo sát thăm dò đợt 1</div>
+                </div>
+                <div class="study-stat-box">
+                  <div class="study-stat-num">N = 357</div>
+                  <div class="study-stat-lbl">Khảo sát chuẩn hóa đợt 2</div>
+                </div>
+                <div class="study-stat-box">
+                  <div class="study-stat-num">N = 80</div>
+                  <div class="study-stat-lbl">Thực nghiệm đối chứng</div>
+                </div>
+              </div>
+
+              <div style="font-size: 0.78rem; color: #e2e8f0; margin-top: 12px; space-y: 6px; line-height: 1.55;">
+                <p>• <strong>Phát hiện từ khảo sát N = 357:</strong> Điểm TB nhận thức A = 87,21/100; điểm TB hành vi B = 91,32/100. Điểm gãy hành vi rõ nét nhất nằm ở <strong>tình huống T4 (bẫy OTP học bổng dưới áp lực 5 phút)</strong> khi chỉ 63,6% đạt điểm tối đa.</p>
+                <p style="margin-top: 6px;">• <strong>Hiệu quả can thiệp BK SafeID Coach (N = 80):</strong> Nhóm 40 học sinh sử dụng BK SafeID Coach tăng điểm hành vi từ <strong>78,5 lên 94,2 điểm (+15,7 điểm)</strong>, cao hơn nhóm đối chứng học qua tài liệu tĩnh (+9,9 điểm, <em>p &lt; 0,001</em>).</p>
+              </div>
+            </div>
+
+            <div class="card stack-sm">
+              <h3 style="font-size: 0.92rem; font-weight: 700; color: var(--navy-900);">Minh bạch lưu trữ &amp; Quyền riêng tư</h3>
+              <ul style="font-size: 0.78rem; color: var(--slate-600); padding-left: 18px; line-height: 1.6;">
+                <li><strong>Nơi lưu trữ:</strong> Toàn bộ dữ liệu tiến trình của mã ẩn danh được lưu cục bộ trong <code>localStorage</code> trên trình duyệt của bạn, tách biệt hoàn toàn giữa các mã.</li>
+                <li><strong>Không lưu tệp nhạy cảm:</strong> Ảnh, video và tệp âm thanh chỉ được đọc tạm trên bộ nhớ RAM khi phân tích và tự động giải phóng, không lưu lên máy chủ công cộng.</li>
+                <li><strong>Bảo vệ thông tin cá nhân:</strong> Bộ lọc <code>maskSensitiveData()</code> tự động che số CCCD, SĐT, OTP và mật khẩu trước khi gửi nội dung tới Google Gemini API.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-bar">
+      <strong>BK SafeID Coach</strong> • Trường THPT Chuyên Bắc Kạn – Sở GD&amp;ĐT tỉnh Thái Nguyên • Phiên bản tối ưu tốc độ cao (0 thư viện ngoài)
+    </footer>
+  </div>
+
+  <!-- ========================================================================
+       JAVASCRIPT ENGINE: ZERO-DEPENDENCY, MULTI-KEY ROTATION, FAST GEMINI 3.8
+       ======================================================================== -->
+  <script>
+    "use strict";
+
+    // Khóa lưu trữ localStorage
+    const LS_PROFILES = "bk_safeid_profiles_v4";
+    const LS_ACTIVE_CODE = "bk_safeid_active_code_v4";
+    const LS_API_KEYS = "bk_safeid_api_keys";
+
+    let activeAnonCode = null;
+    let chatRequestLock = false;
+
+    // Dữ liệu tệp đa phương thức lưu tạm trên RAM (không lưu vào localStorage)
+    let tempImageB64 = null;
+    let tempImageMime = "image/jpeg";
+    let tempVideoFramesB64 = [];
+    let tempVideoObjUrl = null;
+    let tempAudioB64 = null;
+    let tempAudioMime = "audio/mp3";
+    let tempAudioObjUrl = null;
+
+    /* ========================================================================
+       1. QUẢN LÝ GEMINI API KEYS & XOAY VÒNG TỰ ĐỘNG (KHÔNG HARDCODE KEY)
+       ======================================================================== */
+    function getSavedApiKeys() {
+      try {
+        const raw = localStorage.getItem(LS_API_KEYS);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          return parsed.map(k => String(k || "").trim()).filter(Boolean);
+        }
+        return [];
+      } catch (_) {
+        return [];
+      }
+    }
+
+    function setSavedApiKeys(keysArray) {
+      const cleanKeys = (keysArray || [])
+        .map(k => String(k || "").trim())
+        .filter(Boolean);
+      localStorage.setItem(LS_API_KEYS, JSON.stringify(cleanKeys));
+      refreshApiKeyStatusUI();
+      return cleanKeys;
+    }
+
+    function refreshApiKeyStatusUI() {
+      const keys = getSavedApiKeys();
+      const dot = document.getElementById("key-status-dot");
+      const label = document.getElementById("key-status-label");
+      if (!dot || !label) return;
+
+      if (keys.length > 0) {
+        dot.className = "status-dot green";
+        label.textContent = `🔑 Cài đặt API Key (${keys.length})`;
+      } else {
+        dot.className = "status-dot amber";
+        label.textContent = "🔑 Cài đặt API Key";
+      }
+    }
+
+    function openApiKeyModal() {
+      const keys = getSavedApiKeys();
+      document.getElementById("apikey-textarea").value = keys.join("\n");
+      const fb = document.getElementById("apikey-feedback");
+      fb.classList.add("hidden");
+      document.getElementById("apikey-modal").classList.remove("hidden");
+    }
+
+    function closeApiKeyModal() {
+      document.getElementById("apikey-modal").classList.add("hidden");
+    }
+
+    function clearAllApiKeys() {
+      localStorage.removeItem(LS_API_KEYS);
+      document.getElementById("apikey-textarea").value = "";
+      refreshApiKeyStatusUI();
+      const fb = document.getElementById("apikey-feedback");
+      fb.className = "alert-box alert-amber";
+      fb.textContent = "Đã xóa toàn bộ Gemini API Key khỏi trình duyệt này.";
+      fb.classList.remove("hidden");
+    }
+
+    async function saveAndTestApiKeys() {
+      const raw = document.getElementById("apikey-textarea").value;
+      const lines = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+      const keys = setSavedApiKeys(lines);
+      const fb = document.getElementById("apikey-feedback");
+
+      if (keys.length === 0) {
+        fb.className = "alert-box alert-amber";
+        fb.textContent = "Bạn chưa nhập API Key nào. Hãy lấy khóa miễn phí tại aistudio.google.com và dán vào ô trên.";
+        fb.classList.remove("hidden");
+        return;
+      }
+
+      const btn = document.getElementById("btn-save-test-key");
+      btn.disabled = true;
+      btn.textContent = "Đang kiểm tra kết nối...";
+      fb.className = "alert-box alert-amber";
+      fb.textContent = "Đang gửi tín hiệu kiểm tra tốc độ tới Gemini API...";
+      fb.classList.remove("hidden");
+
+      try {
+        const startTime = performance.now();
+        await callGeminiFast(
+          [{ role: "user", parts: [{ text: "Xin chào, trả lời ngắn 1 câu: Đã kết nối." }] }],
+          "Bạn là BK SafeID Coach. Trả lời đúng 1 câu ngắn."
+        );
+        const elapsed = ((performance.now() - startTime) / 1000).toFixed(1);
+        fb.className = "alert-box alert-emerald";
+        fb.textContent = `✓ Kết nối thành công (${elapsed} giây)! Đã lưu ${keys.length} API Key và sẵn sàng sử dụng.`;
+      } catch (err) {
+        fb.className = "alert-box alert-rose";
+        fb.textContent = `✕ Kiểm tra thất bại: ${err.message}`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Lưu & Kiểm tra kết nối";
+      }
+    }
+
+    /* ========================================================================
+       2. HÀM GỌI GEMINI SIÊU NHANH (2-4s) VỚI THINKING MINIMAL & FALLBACK
+       ======================================================================== */
+    async function callGeminiFast(contentsArray, systemInstructionText) {
+      const keys = getSavedApiKeys();
+      if (keys.length === 0) {
+        const noKeyErr = new Error("Chưa có Gemini API Key. Hãy bấm '🔑 Cài đặt API Key' ở góc trên để dán khóa miễn phí từ aistudio.google.com.");
+        noKeyErr.code = "NO_KEY";
+        throw noKeyErr;
+      }
+
+      let lastErrorMessage = "Không thể kết nối tới máy chủ Gemini.";
+
+      // Xoay vòng qua từng API Key đã lưu
+      for (let kIdx = 0; kIdx < keys.length; kIdx++) {
+        const currentKey = keys[kIdx];
+
+        // Ưu tiên gemini-3.8-flash (tắt suy nghĩ sâu để phản hồi trong 2-4s),
+        // tự động fallback sang gemini-2.5-flash nếu gặp HTTP 404
+        const endpoints = [
+          {
+            model: "gemini-3.8-flash",
+            body: {
+              systemInstruction: { parts: [{ text: systemInstructionText }] },
+              contents: contentsArray,
+              generationConfig: {
+                temperature: 0.35,
+                maxOutputTokens: 1500,
+                thinkingConfig: { thinkingLevel: "minimal" }
+              }
+            }
+          },
+          {
+            model: "gemini-2.5-flash",
+            body: {
+              systemInstruction: { parts: [{ text: systemInstructionText }] },
+              contents: contentsArray,
+              generationConfig: {
+                temperature: 0.35,
+                maxOutputTokens: 1500
+              }
+            }
+          }
+        ];
+
+        let rotateToNextKey = false;
+
+        for (let mIdx = 0; mIdx < endpoints.length; mIdx++) {
+          const ep = endpoints[mIdx];
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${ep.model}:generateContent`;
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+          try {
+            const response = await fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-goog-api-key": currentKey
+              },
+              signal: controller.signal,
+              body: JSON.stringify(ep.body)
+            });
+
+            if (!response.ok) {
+              let apiErrDetail = "";
+              try {
+                const errJson = await response.json();
+                apiErrDetail = errJson.error?.message || "";
+              } catch (_) {}
+
+              if (response.status === 404 && mIdx === 0) {
+                // Model 3.8 chưa khả dụng trên project này -> chuyển ngay sang gemini-2.5-flash
+                lastErrorMessage = `Model ${ep.model} trả về 404, đang thử dự phòng...`;
+                continue;
+              }
+
+              if (response.status === 429) {
+                lastErrorMessage = `Lỗi 429 (Hết hạn mức 20 lượt miễn phí/ngày của Key #${kIdx + 1}). Hãy thêm API Key từ tài khoản Gmail khác trong Cài đặt API Key.`;
+                rotateToNextKey = true;
+                break; // Nhảy sang key kế tiếp trong mảng
+              }
+
+              if (response.status === 400 || response.status === 403) {
+                lastErrorMessage = `Lỗi ${response.status} (API Key #${kIdx + 1} không hợp lệ hoặc đã bị Google khóa do rò rỉ công khai). Hãy tạo khóa mới tại aistudio.google.com và dán lại vào Cài đặt API Key. ${apiErrDetail ? "(" + apiErrDetail + ")" : ""}`;
+                rotateToNextKey = true;
+                break;
+              }
+
+              lastErrorMessage = `Lỗi máy chủ Gemini (HTTP ${response.status}): ${apiErrDetail || "Vui lòng thử lại sau."}`;
+              break;
+            }
+
+            const data = await response.json();
+            const replyText = (data.candidates?.[0]?.content?.parts || [])
+              .map(part => part.text || "")
+              .join("\n")
+              .trim();
+
+            if (!replyText) {
+              lastErrorMessage = "Mô hình AI không trả về nội dung văn bản. Hãy thử gửi lại câu hỏi.";
+              continue;
+            }
+
+            return replyText;
+          } catch (err) {
+            if (err.name === "AbortError") {
+              lastErrorMessage = "Quá thời gian chờ phản hồi (20 giây) do mạng chậm hoặc tệp quá nặng. Hãy kiểm tra mạng và thử lại.";
+            } else {
+              lastErrorMessage = `Lỗi kết nối mạng: ${err.message || "Không thể truy cập generativelanguage.googleapis.com"}`;
+            }
+          } finally {
+            clearTimeout(timeoutId);
+          }
+        }
+
+        if (!rotateToNextKey && kIdx === keys.length - 1) {
+          break;
+        }
+      }
+
+      throw new Error(lastErrorMessage);
+    }
+
+    /* ========================================================================
+       3. QUẢN LÝ MÃ ẨN DANH & HỒ SƠ TIẾN TRÌNH ĐỘC LẬP (LOCALSTORAGE)
+       ======================================================================== */
+    function loadProfilesMap() {
+      try {
+        const raw = localStorage.getItem(LS_PROFILES);
+        return raw ? JSON.parse(raw) : {};
+      } catch (_) {
+        return {};
+      }
+    }
+
+    function saveProfilesMap(mapObj) {
+      try {
+        localStorage.setItem(LS_PROFILES, JSON.stringify(mapObj));
+      } catch (e) {
+        console.error("Lỗi lưu localStorage:", e);
+      }
+    }
+
+    function buildBlankProfile(code) {
+      return {
+        code: code,
+        updatedAt: new Date().toISOString(),
+        chatHistory: [],
+        awarenessAnswers: {},
+        awarenessScore: null, // null = "Chưa đánh giá"
+        completedScenarios: {},
+        behaviorScore: null,  // null = "Chưa đánh giá"
+        completedChallenges: [false, false, false, false, false]
+      };
+    }
+
+    function getActiveProfile() {
+      if (!activeAnonCode) return null;
+      const map = loadProfilesMap();
+      if (!map[activeAnonCode]) {
+        map[activeAnonCode] = buildBlankProfile(activeAnonCode);
+        saveProfilesMap(map);
+      }
+      return map[activeAnonCode];
+    }
+
+    function mutateActiveProfile(fn) {
+      if (!activeAnonCode) return null;
+      const map = loadProfilesMap();
+      const prof = map[activeAnonCode] || buildBlankProfile(activeAnonCode);
+      fn(prof);
+      prof.updatedAt = new Date().toISOString();
+      map[activeAnonCode] = prof;
+      saveProfilesMap(map);
+      return prof;
+    }
+
+    function sanitizeAnonCode(str) {
+      return String(str || "")
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9_-]/g, "");
+    }
+
+    function generateRandomAnonCode() {
+      const map = loadProfilesMap();
+      let code = "";
+      let guard = 0;
+      do {
+        code = "BK" + Math.floor(100 + Math.random() * 900);
+        guard++;
+      } while (map[code] && guard < 60);
+
+      document.getElementById("anon-code-input").value = code;
+      document.getElementById("auth-error-text").classList.add("hidden");
+    }
+
+    function renderSavedCodesList() {
+      const map = loadProfilesMap();
+      const codes = Object.keys(map);
+      const sec = document.getElementById("saved-codes-section");
+      const list = document.getElementById("saved-codes-list");
+
+      if (codes.length === 0) {
+        sec.classList.add("hidden");
+        return;
+      }
+
+      sec.classList.remove("hidden");
+      list.innerHTML = codes.map(code => {
+        const p = map[code];
+        const aStr = typeof p.awarenessScore === "number" ? p.awarenessScore : "--";
+        const bStr = typeof p.behaviorScore === "number" ? p.behaviorScore : "--";
+        const doneSc = Object.keys(p.completedScenarios || {}).length;
+        return `
+          <button type="button" onclick="pickSavedCode('${code}')" class="saved-code-btn">
+            <div>
+              <div style="font-size: 0.82rem; font-weight: 800; color: var(--teal-800);">${code}</div>
+              <div style="font-size: 0.7rem; color: var(--slate-500);">Tình huống: ${doneSc}/8</div>
+            </div>
+            <div style="font-size: 0.72rem; font-weight: 700; color: var(--navy-800); text-align: right;">
+              A: ${aStr} | B: ${bStr}
+            </div>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function pickSavedCode(code) {
+      document.getElementById("anon-code-input").value = code;
+      confirmAnonLogin();
+    }
+
+    function confirmAnonLogin() {
+      const input = document.getElementById("anon-code-input");
+      const err = document.getElementById("auth-error-text");
+      const cleanCode = sanitizeAnonCode(input.value);
+
+      if (cleanCode.length < 3) {
+        err.textContent = "Vui lòng nhập mã ẩn danh tối thiểu 3 ký tự (ví dụ: BK001) hoặc bấm 'Tạo mã ngẫu nhiên'.";
+        err.classList.remove("hidden");
+        return;
+      }
+
+      err.classList.add("hidden");
+      activeAnonCode = cleanCode;
+      localStorage.setItem(LS_ACTIVE_CODE, activeAnonCode);
+      getActiveProfile();
+
+      document.getElementById("auth-modal").classList.add("hidden");
+      syncProfileToUI();
+    }
+
+    function openAuthModalForSwitch() {
+      renderSavedCodesList();
+      document.getElementById("anon-code-input").value = activeAnonCode || "";
+      const keepBtn = document.getElementById("btn-keep-current-code");
+      if (activeAnonCode) {
+        keepBtn.classList.remove("hidden");
+      } else {
+        keepBtn.classList.add("hidden");
+      }
+      document.getElementById("auth-modal").classList.remove("hidden");
+    }
+
+    function closeAuthModal() {
+      if (activeAnonCode) {
+        document.getElementById("auth-modal").classList.add("hidden");
+      }
+    }
+
+    function openDeleteModal() {
+      if (!activeAnonCode) return;
+      document.getElementById("delete-target-code").textContent = activeAnonCode;
+      document.getElementById("delete-modal").classList.remove("hidden");
+    }
+
+    function closeDeleteModal() {
+      document.getElementById("delete-modal").classList.add("hidden");
+    }
+
+    function executeDeleteCurrentProfile() {
+      if (!activeAnonCode) return;
+      const map = loadProfilesMap();
+      map[activeAnonCode] = buildBlankProfile(activeAnonCode);
+      saveProfilesMap(map);
+      closeDeleteModal();
+      syncProfileToUI();
+    }
+
+    function syncProfileToUI() {
+      const prof = getActiveProfile();
+      if (!prof) return;
+
+      document.getElementById("top-anon-code").textContent = prof.code;
+      document.getElementById("sidebar-code").textContent = prof.code;
+      document.getElementById("chat-code-label").textContent = prof.code;
+      document.getElementById("practice-code-tag").textContent = prof.code;
+
+      updateABGMetricsUI();
+      renderChatFeed();
+      renderAwarenessItems();
+      renderScenariosGrid();
+      renderChallengesList();
+    }
+
+    function updateABGMetricsUI() {
+      const prof = getActiveProfile();
+      if (!prof) return;
+
+      const hasA = typeof prof.awarenessScore === "number";
+      const doneScenarios = Object.keys(prof.completedScenarios || {}).length;
+      const hasB = typeof prof.behaviorScore === "number" && doneScenarios > 0;
+
+      const topA = document.getElementById("top-val-a");
+      const topB = document.getElementById("top-val-b");
+      const topG = document.getElementById("top-val-g");
+
+      const dashA = document.getElementById("dash-val-a");
+      const subA = document.getElementById("dash-sub-a");
+      const dashB = document.getElementById("dash-val-b");
+      const subB = document.getElementById("dash-sub-b");
+      const dashG = document.getElementById("dash-val-g");
+      const subG = document.getElementById("dash-sub-g");
+      const interp = document.getElementById("dash-interpretation");
+      const awareBadge = document.getElementById("awareness-badge");
+
+      if (hasA) {
+        topA.textContent = `${prof.awarenessScore}/100`;
+        dashA.textContent = `${prof.awarenessScore} / 100 điểm`;
+        subA.textContent = "Đã hoàn thành 8 câu khảo sát nhận thức";
+        awareBadge.textContent = `A = ${prof.awarenessScore}/100`;
+        awareBadge.className = "badge badge-emerald";
+      } else {
+        topA.textContent = "Chưa đánh giá";
+        dashA.textContent = "Chưa đánh giá";
+        subA.textContent = "Hoàn thành 8 câu đánh giá nhận thức B1–B8";
+        awareBadge.textContent = "Chưa đánh giá";
+        awareBadge.className = "badge badge-slate";
+      }
+
+      if (hasB) {
+        topB.textContent = `${prof.behaviorScore}/100`;
+        dashB.textContent = `${prof.behaviorScore} / 100 điểm`;
+        subB.textContent = `Đã thực hành: ${doneScenarios}/8 tình huống T1–T8`;
+      } else {
+        topB.textContent = "Chưa đánh giá";
+        dashB.textContent = "Chưa đánh giá";
+        subB.textContent = "Chưa thực hành tình huống nào (0/8)";
+      }
+
+      if (hasA && hasB) {
+        const gap = prof.awarenessScore - prof.behaviorScore;
+        const gapLabel = `${gap > 0 ? "+" : ""}${gap} điểm`;
+        topG.textContent = gapLabel;
+        dashG.textContent = gapLabel;
+        subG.textContent = `Tính từ A (${prof.awarenessScore}) − B (${prof.behaviorScore})`;
+
+        if (gap >= 15) {
+          interp.className = "alert-box alert-amber";
+          interp.innerHTML = `<strong>Phát hiện khoảng cách nhận thức – hành vi đáng lưu ý (G = ${gapLabel}):</strong> Bạn hiểu biết khá tốt về nguy cơ (<strong>A = ${prof.awarenessScore}</strong>) nhưng quyết định hành vi thực tế (<strong>B = ${prof.behaviorScore}</strong>) còn lỗ hổng ("Biết nhưng vẫn chia sẻ"). Hãy rà soát các tình huống bị trừ điểm bên dưới!`;
+        } else if (gap > 0) {
+          interp.className = "alert-box";
+          interp.style.background = "var(--blue-50)";
+          interp.style.border = "1px solid #bfdbfe";
+          interp.style.color = "#1e3a8a";
+          interp.innerHTML = `<strong>Khoảng cách nhỏ (G = ${gapLabel}):</strong> Nhận thức (<strong>A = ${prof.awarenessScore}</strong>) và hành vi bảo vệ (<strong>B = ${prof.behaviorScore}</strong>) của bạn tương đối đồng đều. Hãy tiếp tục duy trì thói quen dừng lại kiểm tra trước khi chia sẻ.`;
+        } else {
+          interp.className = "alert-box alert-emerald";
+          interp.innerHTML = `<strong>Hành vi tự bảo vệ vững vàng (G = ${gapLabel}):</strong> Điểm thực hành xử lý tình huống của bạn (<strong>B = ${prof.behaviorScore}</strong>) đạt mức an toàn cao, tương xứng hoặc vượt mức nhận thức lý thuyết (<strong>A = ${prof.awarenessScore}</strong>).`;
+        }
+      } else {
+        topG.textContent = "Chưa đánh giá";
+        dashG.textContent = "Chưa đánh giá";
+        subG.textContent = "Hiển thị khi đã có đủ cả điểm A và điểm B";
+        interp.className = "alert-box";
+        interp.style.background = "var(--slate-50)";
+        interp.style.border = "1px solid var(--slate-200)";
+        interp.style.color = "var(--navy-800)";
+        interp.innerHTML = `Mã ẩn danh <strong>${prof.code}</strong> chưa có đủ cả hai bài đánh giá Nhận thức (A) và Tình huống hành vi (B). Hệ thống giữ nguyên trạng thái <strong>"Chưa đánh giá"</strong> theo đúng quy chuẩn khoa học.`;
+      }
+    }
+
+    /* ========================================================================
+       4. TAB 1: SYSTEM PERSONA, LỌC PII & HỘI THOẠI ĐA LƯỢT
+       ======================================================================== */
+    const SYSTEM_PERSONA = `
+Bạn là BK SafeID Coach – trợ lý AI tư vấn an toàn số và phòng chống mạo danh dành cho học sinh THPT tại phường Bắc Kạn (Trường THPT Chuyên Bắc Kạn, tỉnh Thái Nguyên).
+
+NGUYÊN TẮC CỐT LÕI (BẮT BUỘC TUÂN THỦ):
+1. ĐỌC HIỂU ĐÚNG TRỌNG TÂM:
+   - Hiểu tiếng Việt tự nhiên, kể cả câu ngắn, thiếu dấu, viết tắt hoặc hội thoại tiếp nối ("rồi", "chưa", "tiếp theo làm gì?", "không thấy nút đó").
+   - Phân biệt rạch ròi từng tình huống, tuyệt đối không dùng một mẫu câu trả lời chung cho mọi vấn đề:
+     * LỘ ẢNH CCCD / THẺ HỌC SINH / GIẤY KHEN:
+       1) Gỡ hoặc ẩn ngay bài đăng/story chứa ảnh CCCD.
+       2) Nếu đã gửi qua tin nhắn cho người khác, đề nghị người nhận xóa ngay.
+       3) Kiểm tra trên ảnh đã lộ những thông tin gì (số CCCD 12 số, mã QR, ngày sinh, địa chỉ).
+       4) Cảnh giác cao độ với cuộc gọi, tin nhắn mạo danh cơ quan công an, ngân hàng hoặc nhà trường.
+       -> TUYỆT ĐỐI KHÔNG tự động khuyên bật 2FA hay đổi mật khẩu Facebook khi người dùng chỉ bị lộ ảnh CCCD và chưa có dấu hiệu bị hack tài khoản!
+     * LỘ MÃ OTP:
+       1) Xác định ngay mã OTP đó thuộc ngân hàng, ví điện tử hay mạng xã hội nào.
+       2) Ngừng liên lạc với đối tượng ngay lập tức.
+       3) Gọi tổng đài chính thức của ngân hàng để khóa khẩn cấp thẻ/tài khoản hoặc đổi mật khẩu ứng dụng liên quan ngay.
+       4) Kiểm tra biến động số dư / lịch sử đăng nhập và báo ngay cho bố mẹ, thầy cô.
+     * LỘ MẬT KHẨU / MẤT TÀI KHOẢN:
+       1) Đổi mật khẩu mới mạnh hơn trên ứng dụng/trang web chính thức.
+       2) Vào phần Cài đặt bảo mật để đăng xuất khỏi tất cả thiết bị lạ.
+       3) Bật xác thực hai bước (2FA) và báo cho bạn bè/người thân biết để tránh bị mạo danh nhắn tin vay tiền.
+     * BỊ LỪA CHUYỂN TIỀN:
+       1) Liên hệ ngay ngân hàng qua số hotline chính thức để yêu cầu hỗ trợ tra soát.
+       2) Lưu giữ toàn bộ bằng chứng (biên lai chuyển tiền, ảnh chụp tin nhắn, số tài khoản nhận tiền).
+       3) Báo cho bố mẹ/thầy cô và trình báo cơ quan Công an gần nhất.
+       4) Tuyệt đối KHÔNG chuyển thêm tiền cho bất kỳ ai hứa hẹn "lấy lại tiền treo/tiền bị lừa".
+     * NGHI DEEPFAKE (Cuộc gọi video mờ 3-5s, giọng nói giống người thân hỏi vay tiền):
+       1) Giải thích các dấu hiệu nghi vấn (video ngắn rồi ngắt viện cớ mạng yếu, khẩu hình lệch tiếng, giọng nói đều đều).
+       2) Hướng dẫn gọi điện thoại trực tiếp qua số di động đã lưu trong danh bạ để xác minh độc lập.
+       3) Không khẳng định 100% thật hay giả khi thiếu bằng chứng kỹ thuật.
+2. HƯỚNG DẪN TỪNG BƯỚC & GHI NHỚ NGỮ CẢNH:
+   - Trình bày ngắn gọn, rõ ràng từ 2 đến 5 bước đánh số thứ tự ưu tiên.
+   - Sau khi hướng dẫn, chỉ hỏi ĐÚNG MỘT câu hỏi ngắn cần thiết để hỗ trợ bước tiếp theo.
+   - Ghi nhớ toàn bộ cuộc trò chuyện hiện tại, không bắt học sinh kể lại thông tin đã nói.
+3. AN TOÀN & TRUNG THỰC:
+   - Không yêu cầu học sinh cung cấp mật khẩu, mã OTP hay số CCCD thật.
+   - Không bịa đặt đường link, quy định pháp luật hoặc kết quả giám định.
+`;
+
+    function maskSensitiveData(rawText) {
+      let masked = false;
+      const clean = String(rawText || "")
+        .replace(/(^|[^\d])0\d{11}(?!\d)/g, (_, p1) => { masked = true; return p1 + "[CCCD ĐÃ ẨN]"; })
+        .replace(/(^|[^\d])0(?:3|5|7|8|9)\d{8}(?!\d)/g, (_, p1) => { masked = true; return p1 + "[SĐT ĐÃ ẨN]"; })
+        .replace(/((?:OTP|mã xác nhận|mã xác thực)\s*(?:là|:|=)?\s*)\d{4,8}\b/gi, (_, p1) => { masked = true; return p1 + "[OTP ĐÃ ẨN]"; })
+        .replace(/((?:mật khẩu|password|pass)\s*(?:là|:|=)\s*)\S+/gi, (_, p1) => { masked = true; return p1 + "[MẬT KHẨU ĐÃ ẨN]"; });
+      return { clean, masked };
+    }
+
+    function renderSafeMarkdown(text) {
+      const escaped = String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+      return escaped
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.+?)\*/g, "<em>$1</em>")
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\n/g, "<br/>");
+    }
+
+    function renderChatFeed() {
+      const feed = document.getElementById("chat-feed");
+      const prof = getActiveProfile();
+      feed.innerHTML = "";
+
+      const welcome = document.createElement("div");
+      welcome.className = "msg-row bot";
+      welcome.innerHTML = `
+        <div class="chat-avatar">BK</div>
+        <div class="msg-bubble">
+          Chào <strong>${prof ? prof.code : "bạn"}</strong>! Mình là <strong>BK SafeID Coach</strong> – trợ lý AI tư vấn an toàn số và phòng chống mạo danh.<br/>
+          Bạn đang gặp tình huống nghi lừa đảo, lỡ lộ thông tin cá nhân (CCCD, OTP) hay cần kiểm tra dấu hiệu Deepfake? Hãy kể ngắn gọn cho mình biết nhé!
+        </div>
+      `;
+      feed.appendChild(welcome);
+
+      if (prof && Array.isArray(prof.chatHistory)) {
+        prof.chatHistory.forEach(item => {
+          appendChatBubble(item.role === "user" ? "user" : "bot", item.parts?.[0]?.text || "");
+        });
+      }
+    }
+
+    function appendChatBubble(type, content, isNoKey = false) {
+      const feed = document.getElementById("chat-feed");
+      const row = document.createElement("div");
+
+      if (type === "user") {
+        row.className = "msg-row user";
+        row.innerHTML = `
+          <div class="msg-bubble">${renderSafeMarkdown(content)}</div>
+          <div class="user-tag">${activeAnonCode || "HS"}</div>
+        `;
+      } else if (type === "error") {
+        row.className = "msg-row error";
+        row.innerHTML = `
+          <div class="chat-avatar" style="background: var(--rose-600);">!</div>
+          <div class="msg-bubble stack-sm">
+            <div>${renderSafeMarkdown(content)}</div>
+            <div>
+              <button type="button" onclick="openApiKeyModal()" class="btn-danger" style="padding: 7px 12px; font-size: 0.78rem;">
+                🔑 Mở Cài đặt API Key ngay
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        row.className = "msg-row bot";
+        row.innerHTML = `
+          <div class="chat-avatar">BK</div>
+          <div class="msg-bubble">${renderSafeMarkdown(content)}</div>
+        `;
+      }
+
+      feed.appendChild(row);
+      feed.scrollTop = feed.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const feed = document.getElementById("chat-feed");
+      const id = "typing-" + Date.now();
+      const row = document.createElement("div");
+      row.id = id;
+      row.className = "msg-row bot";
+      row.innerHTML = `
+        <div class="chat-avatar">BK</div>
+        <div class="msg-bubble" style="padding: 10px 14px; color: var(--slate-500); font-size: 0.82rem; display: flex; align-items: center; gap: 8px;">
+          <span class="typing-dots"><span></span><span></span><span></span></span>
+          <span>Đang phân tích tình huống...</span>
+        </div>
+      `;
+      feed.appendChild(row);
+      feed.scrollTop = feed.scrollHeight;
+      return id;
+    }
+
+    function removeTypingIndicator(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function sendQuickChat(promptText) {
+      const input = document.getElementById("chat-input");
+      input.value = promptText;
+      submitChatMessage(new Event("submit"));
+    }
+
+    function resetCurrentChat() {
+      mutateActiveProfile(p => { p.chatHistory = []; });
+      document.getElementById("pii-warning-strip").classList.add("hidden");
+      renderChatFeed();
+    }
+
+    async function submitChatMessage(event) {
+      if (event && event.preventDefault) event.preventDefault();
+      if (chatRequestLock) return;
+
+      const input = document.getElementById("chat-input");
+      const rawText = input.value.trim();
+      if (!rawText) return;
+
+      const { clean, masked } = maskSensitiveData(rawText);
+      if (masked) {
+        document.getElementById("pii-warning-strip").classList.remove("hidden");
+      }
+
+      // Kiểm tra nhanh nếu chưa có API Key -> báo ngay lập tức kèm nút 1-click mở Modal
+      if (getSavedApiKeys().length === 0) {
+        input.value = "";
+        appendChatBubble("user", clean);
+        appendChatBubble(
+          "error",
+          "**Chưa cấu hình Gemini API Key:** Trình duyệt của bạn chưa lưu khóa kết nối AI. Hãy bấm nút bên dưới để dán khóa miễn phí từ `aistudio.google.com` và trò chuyện ngay!"
+        );
+        return;
+      }
+
+      input.value = "";
+      appendChatBubble("user", clean);
+
+      const prof = mutateActiveProfile(p => {
+        if (!Array.isArray(p.chatHistory)) p.chatHistory = [];
+        p.chatHistory.push({ role: "user", parts: [{ text: clean }] });
+        if (p.chatHistory.length > 20) p.chatHistory = p.chatHistory.slice(-20);
+      });
+
+      chatRequestLock = true;
+      const sendBtn = document.getElementById("chat-send-btn");
+      sendBtn.disabled = true;
+      const typingId = addTypingIndicator();
+
+      try {
+        const answer = await callGeminiFast(prof.chatHistory, SYSTEM_PERSONA);
+        removeTypingIndicator(typingId);
+
+        mutateActiveProfile(p => {
+          p.chatHistory.push({ role: "model", parts: [{ text: answer }] });
+          if (p.chatHistory.length > 20) p.chatHistory = p.chatHistory.slice(-20);
+        });
+
+        appendChatBubble("bot", answer);
+      } catch (err) {
+        removeTypingIndicator(typingId);
+        // Xóa lượt hỏi vừa gửi khỏi lịch sử lỗi để học sinh gửi lại sạch sẽ sau khi sửa key
+        mutateActiveProfile(p => {
+          if (p.chatHistory.length && p.chatHistory[p.chatHistory.length - 1].role === "user") {
+            p.chatHistory.pop();
+          }
+        });
+        appendChatBubble("error", `**Không thể nhận phản hồi từ AI:** ${err.message}`);
+      } finally {
+        chatRequestLock = false;
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    }
+
+    /* ========================================================================
+       5. ĐỊNH DẠNG BÁO CÁO ĐA PHƯƠNG THỨC CHUẨN 5 MỤC & 3 MỨC NGUY CƠ
+       ======================================================================== */
+    function renderStructuredReport(aiText) {
+      const upper = String(aiText || "").toUpperCase();
+      let levelText = "TRUNG BÌNH";
+      let riskClass = "risk-med";
+
+      if (upper.includes("MỨC ĐỘ NGUY CƠ: CAO") || upper.includes("NGUY CƠ CAO") || upper.includes("[CAO]")) {
+        levelText = "CAO";
+        riskClass = "risk-high";
+      } else if (upper.includes("MỨC ĐỘ NGUY CƠ: THẤP") || upper.includes("NGUY CƠ THẤP") || upper.includes("[THẤP]")) {
+        levelText = "THẤP";
+        riskClass = "risk-low";
+      }
+
+      return `
+        <div class="stack-sm">
+          <div class="risk-banner ${riskClass}">
+            <span>ĐÁNH GIÁ MỨC ĐỘ NGUY CƠ: ${levelText}</span>
+            <span style="font-size: 0.72rem; font-weight: 600; opacity: 0.85;">Hỗ trợ nhận diện • Không thay thế giám định</span>
+          </div>
+          <div class="report-body">${renderSafeMarkdown(aiText)}</div>
+          <div class="safety-footer-note">
+            <strong>Khuyến cáo an toàn bắt buộc:</strong> Tuyệt đối <strong>KHÔNG chuyển tiền</strong>, <strong>KHÔNG cung cấp mã OTP/mật khẩu</strong> và <strong>KHÔNG bấm vào đường link đáng ngờ</strong>. Hãy gọi điện thoại trực tiếp qua số đã lưu để xác minh danh tính!
+          </div>
+        </div>
+      `;
+    }
+
+    function renderNoKeyErrorBox() {
+      return `
+        <div class="alert-box alert-rose stack-sm">
+          <div><strong>Chưa cấu hình Gemini API Key:</strong> Bạn cần nạp ít nhất 1 khóa Gemini API miễn phí vào trình duyệt trước khi chạy phân tích.</div>
+          <div>
+            <button type="button" onclick="openApiKeyModal()" class="btn-danger" style="padding: 7px 12px; font-size: 0.78rem;">
+              🔑 Mở Cài đặt API Key ngay
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    // TAB 2: KIỂM TRA HÌNH ẢNH
+    function handleImageUpload(event) {
+      const file = event.target.files?.[0];
+      const outBox = document.getElementById("image-result-box");
+      if (!file) return;
+
+      if (file.size > 10 * 1024 * 1024) {
+        outBox.innerHTML = '<div class="alert-box alert-rose">Tệp ảnh vượt quá 10MB. Vui lòng chọn ảnh dung lượng nhẹ hơn để đảm bảo tốc độ xử lý.</div>';
+        return;
+      }
+
+      tempImageMime = file.type || "image/jpeg";
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        tempImageB64 = dataUrl.split(",")[1];
+        document.getElementById("image-preview-img").src = dataUrl;
+        document.getElementById("image-meta-text").textContent = `${file.name} • ${Math.round(file.size / 1024)} KB`;
+        document.getElementById("image-preview-wrap").classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function runImageAnalysis() {
+      const outBox = document.getElementById("image-result-box");
+      if (getSavedApiKeys().length === 0) {
+        outBox.innerHTML = renderNoKeyErrorBox();
+        return;
+      }
+      if (!tempImageB64) {
+        outBox.innerHTML = '<div class="alert-box alert-amber">Vui lòng tải lên một bức ảnh trước khi bấm nút phân tích.</div>';
+        return;
+      }
+
+      const { clean: safeNote } = maskSensitiveData(document.getElementById("image-note-input").value.trim());
+      const btn = document.getElementById("btn-run-image");
+      btn.disabled = true;
+      btn.textContent = "Đang phân tích hình ảnh...";
+      outBox.innerHTML = '<div class="alert-box alert-amber">Đang gửi dữ liệu hình ảnh tới Gemini Vision API (dự kiến 2–4 giây)...</div>';
+
+      try {
+        const prompt = `Hãy phân tích bức ảnh học sinh tải lên và trình bày báo cáo bằng tiếng Việt theo ĐÚNG 5 MỤC sau:
+- Dòng đầu tiên ghi rõ: **MỨC ĐỘ NGUY CƠ: THẤP** hoặc **MỨC ĐỘ NGUY CƠ: TRUNG BÌNH** hoặc **MỨC ĐỘ NGUY CƠ: CAO**.
+1. **Loại nội dung:** Mô tả ngắn gọn nội dung bức ảnh.
+2. **Dấu hiệu phát hiện:** Chỉ ra các dấu hiệu bất thường quan sát được (khuôn mặt không tự nhiên, ánh sáng/bóng đổ lệch, chi tiết biến dạng nghi AI/Deepfake) HOẶC các thông tin định danh nhạy cảm bị lộ trong ảnh (số CCCD, mã QR, ngày sinh, trường lớp, số điện thoại).
+3. **Mức độ nguy cơ & Giải thích:** Giải thích rõ lý do đánh giá mức Thấp, Trung bình hay Cao.
+4. **Giới hạn của phân tích:** Nêu rõ nhận định chỉ dựa trên quan sát hình ảnh tĩnh, không khẳng định 100% thật hay giả khi thiếu bằng chứng xác thực nguồn.
+5. **Khuyến nghị hành động:** Hướng dẫn cách xác minh nguồn gốc hoặc che thông tin trước khi đăng tải.
+
+Ghi chú bối cảnh của học sinh: ${safeNote || "Không có ghi chú thêm."}`;
+
+        const result = await callGeminiFast(
+          [{ role: "user", parts: [{ text: prompt }, { inlineData: { mimeType: tempImageMime, data: tempImageB64 } }] }],
+          "Bạn là chuyên gia phân tích an toàn số của BK SafeID Coach. Trả lời chuẩn 5 mục bằng tiếng Việt."
+        );
+        outBox.innerHTML = renderStructuredReport(result);
+      } catch (err) {
+        outBox.innerHTML = `<div class="alert-box alert-rose"><strong>Lỗi phân tích hình ảnh:</strong> ${err.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Phân tích hình ảnh & Đánh giá nguy cơ";
+      }
+    }
+
+    // TAB 3: KIỂM TRA VIDEO DEEPFAKE (TRÍCH XUẤT 4 KHUNG HÌNH TẠI 15%, 40%, 65%, 85%)
+    function handleVideoUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      if (tempVideoObjUrl) URL.revokeObjectURL(tempVideoObjUrl);
+      tempVideoObjUrl = URL.createObjectURL(file);
+
+      const videoEl = document.getElementById("video-player");
+      const secEl = document.getElementById("video-frames-section");
+      const gridEl = document.getElementById("video-frames-grid");
+      const durLabel = document.getElementById("video-duration-label");
+
+      gridEl.innerHTML = "";
+      tempVideoFramesB64 = [];
+      videoEl.src = tempVideoObjUrl;
+      videoEl.classList.remove("hidden");
+
+      videoEl.onloadedmetadata = async function() {
+        const dur = Math.max(videoEl.duration || 4, 0.5);
+        durLabel.textContent = `Thời lượng: ${dur.toFixed(1)}s`;
+        secEl.classList.remove("hidden");
+
+        const ratios = [0.15, 0.40, 0.65, 0.85];
+        for (const r of ratios) {
+          const t = dur * r;
+          const frameUrl = await grabVideoFrame(videoEl, t);
+          if (frameUrl) {
+            tempVideoFramesB64.push(frameUrl.split(",")[1]);
+            const thumb = document.createElement("div");
+            thumb.className = "frame-thumb";
+            thumb.innerHTML = `
+              <img src="${frameUrl}" alt="Khung ${Math.round(r * 100)}%" />
+              <span class="frame-tag">${Math.round(r * 100)}% (${t.toFixed(1)}s)</span>
+            `;
+            gridEl.appendChild(thumb);
+          }
+        }
+        videoEl.currentTime = 0;
+      };
+    }
+
+    function grabVideoFrame(videoEl, sec) {
+      return new Promise(resolve => {
+        const handler = () => {
+          videoEl.removeEventListener("seeked", handler);
+          const canvas = document.createElement("canvas");
+          const targetW = 360;
+          const aspect = (videoEl.videoHeight || 9) / (videoEl.videoWidth || 16);
+          canvas.width = targetW;
+          canvas.height = Math.round(targetW * aspect) || 202;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.8));
+        };
+        videoEl.addEventListener("seeked", handler);
+        videoEl.currentTime = Math.min(sec, Math.max((videoEl.duration || 1) - 0.1, 0));
+      });
+    }
+
+    async function runVideoAnalysis() {
+      const outBox = document.getElementById("video-result-box");
+      if (getSavedApiKeys().length === 0) {
+        outBox.innerHTML = renderNoKeyErrorBox();
+        return;
+      }
+      if (tempVideoFramesB64.length === 0) {
+        outBox.innerHTML = '<div class="alert-box alert-amber">Vui lòng tải video lên và đợi hệ thống trích xuất xong 4 khung hình (15%, 40%, 65%, 85%) trước khi bấm phân tích.</div>';
+        return;
+      }
+
+      const { clean: safeNote } = maskSensitiveData(document.getElementById("video-note-input").value.trim());
+      const btn = document.getElementById("btn-run-video");
+      btn.disabled = true;
+      btn.textContent = "Đang phân tích 4 khung hình...";
+      outBox.innerHTML = '<div class="alert-box alert-amber">Đang đối chiếu 4 khung hình trích xuất (15%, 40%, 65%, 85%) qua Gemini Multimodal API...</div>';
+
+      try {
+        const prompt = `Đây là 4 khung hình quan trọng được trích xuất tự động từ video của học sinh tại các mốc 15%, 40%, 65% và 85% thời lượng. Hãy phân tích và trình bày báo cáo bằng tiếng Việt theo ĐÚNG 5 MỤC sau:
+- Dòng đầu tiên ghi rõ: **MỨC ĐỘ NGUY CƠ: THẤP** hoặc **MỨC ĐỘ NGUY CƠ: TRUNG BÌNH** hoặc **MỨC ĐỘ NGUY CƠ: CAO**.
+1. **Loại nội dung:** Tóm tắt cảnh quay và nhân vật xuất hiện qua 4 khung hình.
+2. **Dấu hiệu phát hiện:** Phân tích chi tiết sự nhất quán khuôn mặt, viền hàm/cổ, ánh sáng, chuyển động biểu cảm qua các mốc thời gian và dấu hiệu nghi vấn ghép mặt Deepfake.
+3. **Mức độ nguy cơ & Giải thích:** Nêu rõ các dấu hiệu dẫn đến đánh giá Thấp, Trung bình hoặc Cao.
+4. **Giới hạn của phân tích:** Nêu rõ đánh giá dựa trên 4 khung hình trích xuất và mô tả bối cảnh; không khẳng định 100% video thật hay giả khi chưa xác minh nguồn độc lập.
+5. **Khuyến nghị hành động:** Hướng dẫn học sinh kiểm tra lại danh tính người trong video qua cuộc gọi điện thoại trực tiếp.
+
+Mô tả bối cảnh/lời thoại từ học sinh: ${safeNote || "Không có ghi chú thêm."}`;
+
+        const parts = [{ text: prompt }];
+        tempVideoFramesB64.forEach(b64 => {
+          parts.push({ inlineData: { mimeType: "image/jpeg", data: b64 } });
+        });
+
+        const result = await callGeminiFast(
+          [{ role: "user", parts }],
+          "Bạn là chuyên gia nhận diện Deepfake của BK SafeID Coach. Trả lời chuẩn 5 mục bằng tiếng Việt."
+        );
+        outBox.innerHTML = renderStructuredReport(result);
+      } catch (err) {
+        outBox.innerHTML = `<div class="alert-box alert-rose"><strong>Lỗi phân tích video:</strong> ${err.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Phân tích 4 khung hình & Cảnh báo Deepfake";
+      }
+    }
+
+    // TAB 4: PHÂN TÍCH GIỌNG NÓI & ÂM THANH
+    function handleAudioUpload(event) {
+      const file = event.target.files?.[0];
+      const player = document.getElementById("audio-player");
+      const status = document.getElementById("audio-status-box");
+      if (!file) return;
+
+      if (tempAudioObjUrl) URL.revokeObjectURL(tempAudioObjUrl);
+      tempAudioObjUrl = URL.createObjectURL(file);
+      tempAudioMime = file.type || "audio/mp3";
+
+      player.src = tempAudioObjUrl;
+      player.classList.remove("hidden");
+
+      if (file.size > 15 * 1024 * 1024) {
+        tempAudioB64 = null;
+        status.className = "alert-box alert-amber";
+        status.textContent = "Tệp lớn hơn 15MB. Hãy chọn tệp ngắn hơn hoặc nhập nội dung lời thoại vào ô mô tả bên dưới.";
+        status.classList.remove("hidden");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        tempAudioB64 = e.target.result.split(",")[1];
+        status.className = "alert-box alert-emerald";
+        status.textContent = `✓ Đã nạp tệp: ${file.name} (${Math.round(file.size / 1024)} KB)`;
+        status.classList.remove("hidden");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function runAudioAnalysis() {
+      const outBox = document.getElementById("audio-result-box");
+      if (getSavedApiKeys().length === 0) {
+        outBox.innerHTML = renderNoKeyErrorBox();
+        return;
+      }
+
+      const { clean: safeNote } = maskSensitiveData(document.getElementById("audio-note-input").value.trim());
+      if (!tempAudioB64 && !safeNote) {
+        outBox.innerHTML = '<div class="alert-box alert-amber">Vui lòng tải lên tệp âm thanh/video có tiếng hoặc nhập nội dung lời nói cần kiểm tra.</div>';
+        return;
+      }
+
+      const btn = document.getElementById("btn-run-audio");
+      btn.disabled = true;
+      btn.textContent = "Đang gỡ băng & phân tích...";
+      outBox.innerHTML = '<div class="alert-box alert-amber">Đang chuyển lời nói tiếng Việt thành văn bản và phân tích tách bạch nội dung vs. giọng AI...</div>';
+
+      try {
+        const prompt = `Hãy phân tích tệp âm thanh/giọng nói học sinh tải lên và trình bày báo cáo bằng tiếng Việt theo ĐÚNG 5 MỤC sau:
+- Dòng đầu tiên ghi rõ: **MỨC ĐỘ NGUY CƠ: THẤP** hoặc **MỨC ĐỘ NGUY CƠ: TRUNG BÌNH** hoặc **MỨC ĐỘ NGUY CƠ: CAO**.
+1. **Loại nội dung & Gỡ băng tiếng Việt:** Chuyển chính xác lời nói tiếng Việt trong tệp thành văn bản (nếu có tệp đính kèm) và tóm tắt bối cảnh ("${safeNote || "Không có ghi chú thêm"}").
+2. **Dấu hiệu phát hiện (Tách bạch rõ 2 phần):**
+   - *Nguy cơ lừa đảo trong nội dung lời nói:* Phân tích các dấu hiệu đe dọa, hối thúc khẩn cấp, yêu cầu chuyển tiền, hỏi mã OTP hoặc thông tin cá nhân.
+   - *Dấu hiệu kỹ thuật giọng nói tổng hợp AI:* Nhận xét về ngữ điệu, nhịp ngắt nghỉ, âm sắc cơ học (nếu có tệp âm thanh).
+3. **Mức độ nguy cơ & Giải thích:** Giải thích rõ cơ sở xếp mức Thấp, Trung bình hay Cao.
+4. **Giới hạn của phân tích:** Phân biệt rõ nguy cơ lừa đảo trong kịch bản lời nói với bằng chứng giọng nói do AI tạo; thông báo rõ nếu thiếu dữ liệu âm học để kết luận giọng giả.
+5. **Khuyến nghị hành động:** Hướng dẫn kiểm tra lại danh tính người gọi qua kênh liên lạc đáng tin cậy. `;
+
+        const parts = [{ text: prompt }];
+        if (tempAudioB64) {
+          parts.push({ inlineData: { mimeType: tempAudioMime, data: tempAudioB64 } });
+        }
+
+        const result = await callGeminiFast(
+          [{ role: "user", parts }],
+          "Bạn là chuyên gia phân tích âm thanh & an toàn số của BK SafeID Coach. Trả lời chuẩn 5 mục bằng tiếng Việt."
+        );
+        outBox.innerHTML = renderStructuredReport(result);
+      } catch (err) {
+        outBox.innerHTML = `<div class="alert-box alert-rose"><strong>Lỗi phân tích âm thanh:</strong> ${err.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Gỡ băng tiếng Việt & Phân tích nguy cơ";
+      }
+    }
+
+    /* ========================================================================
+       6. TAB 5: ĐÁNH GIÁ NHẬN THỨC (B1-B8) & 8 TÌNH HUỐNG HÀNH VI (T1-T8)
+       ======================================================================== */
+    const AWARENESS_QUESTIONS = [
+      "B1. Ảnh khuôn mặt và đoạn ghi âm giọng nói đăng công khai có thể bị kẻ xấu thu thập để tạo video/âm thanh giả mạo bằng AI.",
+      "B2. Một cuộc gọi video ngắn (3–5 giây, hình mờ hoặc âm thanh rè) chưa đủ cơ sở để khẳng định người gọi là người thân/bạn bè thật.",
+      "B3. Thông tin trên giấy khen, thẻ học sinh, số CCCD và mã QR cá nhân khi đăng công khai có thể bị ghép nối để mạo danh danh tính.",
+      "B4. Các yêu cầu chuyển tiền hoặc cung cấp mã OTP giới hạn thời gian gấp gáp (như trong 5 phút) là chiêu trò thao túng tâm lý phổ biến.",
+      "B5. Xóa ảnh hoặc video sau khi đã đăng công khai không bảo đảm rằng tệp đó chưa từng bị người khác tải xuống hoặc sao chép.",
+      "B6. Đăng nhập tài khoản mạng xã hội chính vào các trang web chế ảnh AI lạ tiềm ẩn nguy cơ mất tài khoản và lộ dữ liệu khuôn mặt.",
+      "B7. Mã xác thực OTP dùng một lần là lớp bảo vệ cuối cùng; không một cán bộ nhà trường hay ngân hàng nào có quyền yêu cầu học sinh đọc mã OTP.",
+      "B8. Khi gặp yêu cầu bất thường qua mạng xã hội, cách xác minh an toàn nhất là gọi điện thoại trực tiếp qua số di động độc lập đã biết trước."
+    ];
+
+    function renderAwarenessItems() {
+      const container = document.getElementById("awareness-list");
+      const prof = getActiveProfile();
+      const saved = (prof && prof.awarenessAnswers) || {};
+
+      container.innerHTML = AWARENESS_QUESTIONS.map((qText, idx) => {
+        const val = saved[idx] || null;
+        return `
+          <div class="likert-row">
+            <div class="likert-text">${qText}</div>
+            <div class="likert-btns">
+              ${[1, 2, 3, 4, 5].map(score => `
+                <button
+                  type="button"
+                  onclick="pickAwarenessLevel(${idx}, ${score})"
+                  class="likert-btn ${val === score ? "selected" : ""}"
+                  title="Mức ${score}"
+                >${score}</button>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function pickAwarenessLevel(qIdx, score) {
+      mutateActiveProfile(p => {
+        if (!p.awarenessAnswers) p.awarenessAnswers = {};
+        p.awarenessAnswers[qIdx] = score;
+      });
+      renderAwarenessItems();
+      document.getElementById("awareness-msg").textContent = "";
+    }
+
+    function saveAwarenessScore() {
+      const prof = getActiveProfile();
+      const ans = (prof && prof.awarenessAnswers) || {};
+      const count = Object.keys(ans).length;
+      const msg = document.getElementById("awareness-msg");
+
+      if (count < AWARENESS_QUESTIONS.length) {
+        msg.style.color = "var(--rose-600)";
+        msg.textContent = `Bạn mới chọn ${count}/${AWARENESS_QUESTIONS.length} câu. Vui lòng đánh giá đủ 8 câu để tính điểm A chính xác.`;
+        return;
+      }
+
+      const total = Object.values(ans).reduce((sum, v) => sum + Number(v), 0);
+      const avg = total / AWARENESS_QUESTIONS.length;
+      const scoreA = Math.round(((avg - 1) / 4) * 100);
+
+      mutateActiveProfile(p => { p.awarenessScore = scoreA; });
+      msg.style.color = "var(--emerald-700)";
+      msg.textContent = `✓ Đã lưu điểm Nhận thức A = ${scoreA}/100 cho mã ${prof.code}!`;
+      updateABGMetricsUI();
+    }
+
+    // 8 TÌNH HUỐNG THỰC TẾ THPT (MỖI TÌNH HUỐNG 4 LỰA CHỌN THEO RUBRIC 0 - 1 - 2 ĐIỂM)
+    const SCENARIOS_T1_T8 = [
+      {
+        id: "T1",
+        title: "T1: Giả giọng người thân yêu cầu chuyển tiền gấp",
+        desc: "Bạn nhận được tin nhắn thoại từ tài khoản giống người thân với giọng nói rất giống thật, báo đang gặp sự cố khẩn cấp và yêu cầu chuyển tiền ngay vào một số tài khoản lạ.",
+        options: [
+          { text: "A. Chuyển tiền ngay vì nghe giọng nói rất giống người thân", score: 0, note: "0 điểm (Rủi ro cao): Công nghệ AI Voice Cloning có thể giả giọng chỉ từ vài giây âm thanh công khai." },
+          { text: "B. Nhắn tin hỏi lại ngay trên chính khung chat đó", score: 1, note: "1 điểm (Chưa an toàn): Nếu tài khoản đó đã bị hack, kẻ lừa đảo vẫn là người trả lời tin nhắn." },
+          { text: "C. Dừng lại, gọi trực tiếp vào số điện thoại di động đã lưu của người thân để xác minh", score: 2, note: "2 điểm (An toàn tối ưu): Xác minh độc lập qua cuộc gọi di động truyền thống giúp phát hiện giả mạo ngay." },
+          { text: "D. Chuyển trước một nửa số tiền để thăm dò tình hình", score: 0, note: "0 điểm (Rủi ro cao): Tuyệt đối không chuyển bất kỳ khoản tiền nào khi chưa xác minh danh tính." }
+        ]
+      },
+      {
+        id: "T2",
+        title: "T2: Đăng ảnh vé sự kiện / thẻ có Họ tên và Mã QR",
+        desc: "Bạn vừa nhận được vé tham gia sự kiện của trường có in Họ tên, Lớp và Mã QR check-in cá nhân. Bạn muốn chụp ảnh đăng lên Story Facebook/Instagram.",
+        options: [
+          { text: "A. Đăng nguyên bức ảnh vé lên Story công khai để khoe với bạn bè", score: 0, note: "0 điểm (Rủi ro cao): Người lạ có thể quét mã QR trên ảnh để lấy thông tin định danh hoặc dùng mất vé." },
+          { text: "B. Chỉ che tên lớp nhưng vẫn để nguyên mã QR và họ tên", score: 0, note: "0 điểm (Không an toàn): Bản thân mã QR đã chứa dữ liệu định danh cá nhân." },
+          { text: "C. Che kín hoàn toàn mã QR và các thông tin định danh trước khi đăng (hoặc không đăng)", score: 2, note: "2 điểm (An toàn tối ưu): Bảo vệ trọn vẹn dữ liệu định danh khỏi bị quét tự động." },
+          { text: "D. Đăng công khai 1 tiếng rồi xóa đi cho an toàn", score: 1, note: "1 điểm (Chưa triệt để): Trong 1 tiếng công khai, ảnh vẫn có thể bị người khác chụp màn hình hoặc tải về." }
+        ]
+      },
+      {
+        id: "T3",
+        title: "T3: Ứng dụng AI ghép mặt đòi ảnh chân dung & tài khoản",
+        desc: "Một trang web chế ảnh AI theo xu hướng yêu cầu bạn tải lên 10 ảnh rõ khuôn mặt và đăng nhập bằng tài khoản Facebook chính để nhận kết quả.",
+        options: [
+          { text: "A. Đăng nhập Facebook và tải 10 ảnh rõ mặt lên để bắt trend", score: 0, note: "0 điểm (Rủi ro cao): Nguy cơ mất tài khoản Facebook và cung cấp dữ liệu khuôn mặt cho bên thứ ba." },
+          { text: "B. Không đăng nhập Facebook nhưng vẫn gửi 10 ảnh cận mặt lên web lạ", score: 1, note: "1 điểm (Trung bình): Tránh mất nick nhưng ảnh khuôn mặt độ nét cao vẫn có nguy cơ bị thu thập làm Deepfake." },
+          { text: "C. Từ chối đăng nhập tài khoản và không tải ảnh khuôn mặt thật lên ứng dụng không rõ uy tín", score: 2, note: "2 điểm (An toàn tối ưu): Chủ động bảo vệ đồng thời tài khoản mạng xã hội và dữ liệu khuôn mặt." },
+          { text: "D. Dùng tài khoản Facebook của bạn thân để đăng nhập thử", score: 0, note: "0 điểm (Không an toàn): Làm lộ rủi ro bảo mật cho tài khoản của người khác." }
+        ]
+      },
+      {
+        id: "T4",
+        title: "T4: Bẫy nhận học bổng yêu cầu gửi mã OTP trong 5 phút",
+        desc: "Một người tự xưng cán bộ xét duyệt học bổng nhắn tin báo bạn có tên trong danh sách nhận hỗ trợ, giục đọc mã OTP 6 số vừa gửi về điện thoại trong vòng 5 phút kẻo hủy suất.",
+        options: [
+          { text: "A. Gửi ngay mã OTP 6 số vì sợ quá 5 phút sẽ mất suất học bổng", score: 0, note: "0 điểm (Rủi ro rất cao): Đây là điểm gãy hành vi điển hình. Gửi OTP đồng nghĩa với việc trao quyền chiếm tài khoản/rút tiền." },
+          { text: "B. Hỏi lại người nhắn lý do cần OTP rồi làm theo hướng dẫn tiếp theo của họ", score: 1, note: "1 điểm (Dễ bị thao túng): Kẻ lừa đảo luôn có kịch bản giải thích rất thuyết phục dưới áp lực thời gian." },
+          { text: "C. Tuyệt đối không gửi mã OTP, ngừng tương tác và hỏi lại giáo viên chủ nhiệm/nhà trường", score: 2, note: "2 điểm (An toàn tối ưu): Giữ vững nguyên tắc không bao giờ chia sẻ OTP và kiểm chứng qua nhà trường." },
+          { text: "D. Chụp màn hình tin nhắn mã OTP gửi cho họ xem trước", score: 0, note: "0 điểm (Rủi ro rất cao): Chụp màn hình gửi mã OTP cũng làm lộ hoàn toàn mã bảo mật." }
+        ]
+      },
+      {
+        id: "T5",
+        title: "T5: Cuộc gọi video 3 giây mờ tiếng rè trên Messenger",
+        desc: "Tài khoản Messenger giống hệt bạn thân gọi video 3 giây (thấy mặt bạn nhưng mờ và rè tiếng rồi tắt ngay), sau đó nhắn bảo đang kẹt tiền gấp, nhờ chuyển khoản vào tài khoản người lạ.",
+        options: [
+          { text: "A. Chuyển khoản ngay vì vừa nhìn thấy mặt bạn qua video call rồi", score: 0, note: "0 điểm (Rủi ro cao): Gọi video Deepfake 3 giây rồi viện cớ mạng yếu là thủ đoạn phổ biến để đánh lừa thị giác." },
+          { text: "B. Từ chối chuyển tiền nhưng im lặng không báo cho bạn thân biết", score: 1, note: "1 điểm (Chưa trọn vẹn): Bạn an toàn nhưng kẻ gian vẫn dùng nick đó đi lừa các bạn khác trong lớp." },
+          { text: "C. Không chuyển tiền, gọi điện thoại trực tiếp qua số di động của bạn thân để xác minh và cảnh báo", score: 2, note: "2 điểm (An toàn tối ưu): Vừa bảo vệ được mình vừa kịp thời giúp bạn thân khóa tài khoản bị hack." },
+          { text: "D. Nhắn tin hỏi mật khẩu hoặc câu hỏi riêng tư ngay trên Messenger đó", score: 1, note: "1 điểm (Trung bình): Vẫn nên gọi điện thoại di động độc lập để xác minh nhanh và chắc chắn nhất." }
+        ]
+      },
+      {
+        id: "T6",
+        title: "T6: Lỡ đăng ảnh thẻ CCCD / giấy khen lộ thông tin định danh",
+        desc: "Bạn vừa đăng bức ảnh cầm thẻ CCCD và giấy khen lên trang cá nhân ở chế độ Công khai thì phát hiện số CCCD 12 chữ số và mã QR trên thẻ hiện rất rõ.",
+        options: [
+          { text: "A. Để nguyên vì nghĩ học sinh thì không ai lợi dụng số CCCD làm gì", score: 0, note: "0 điểm (Rủi ro cao): Số CCCD và mã QR công khai dễ bị thu thập để đăng ký dịch vụ ảo hoặc gọi điện mạo danh." },
+          { text: "B. Chỉ đi đổi mật khẩu Facebook nhưng vẫn giữ nguyên bức ảnh trên trang cá nhân", score: 0, note: "0 điểm (Sai trọng tâm): Đổi mật khẩu không ngăn được người khác tiếp tục xem và tải bức ảnh chứa số CCCD." },
+          { text: "C. Xóa hoặc ẩn ngay bức ảnh đó, kiểm tra những nơi đã chia sẻ và cảnh giác với cuộc gọi lạ", score: 2, note: "2 điểm (An toàn tối ưu): Xử lý trực tiếp nguồn lộ dữ liệu và ngăn chặn phát tán thêm." },
+          { text: "D. Chuyển bài đăng từ Công khai sang chế độ Bạn bè", score: 1, note: "1 điểm (Chưa triệt để): Nếu danh sách bạn bè đông hoặc có tài khoản lạ, ảnh chứa CCCD vẫn nên được gỡ hẳn." }
+        ]
+      },
+      {
+        id: "T7",
+        title: "T7: Đường link bình chọn cuộc thi đòi đăng nhập lại Facebook",
+        desc: "Một tài khoản quen nhắn nhờ bạn bấm vào đường link lạ để bình chọn cuộc thi ảnh. Khi mở ra, trang web yêu cầu nhập lại Số điện thoại và Mật khẩu Facebook.",
+        options: [
+          { text: "A. Nhập tài khoản và mật khẩu Facebook để bình chọn giúp bạn", score: 0, note: "0 điểm (Rủi ro cao): Đây là trang web giả mạo (Phishing) đánh cắp mật khẩu ngay khi bạn bấm đăng nhập." },
+          { text: "B. Thử nhập mật khẩu cũ hoặc tài khoản phụ vào đường link đó", score: 1, note: "1 điểm (Chưa an toàn): Vẫn tiềm ẩn nguy cơ lộ thông tin liên kết và bị dẫn dụ tải tệp độc hại." },
+          { text: "C. Thoát ngay trang web lạ, không nhập mật khẩu và báo cho người gửi biết nick họ có dấu hiệu bị hack", score: 2, note: "2 điểm (An toàn tối ưu): Nhận diện đúng bẫy Phishing và giúp ngăn chặn lây lan." },
+          { text: "D. Gửi đường link đó sang nhóm lớp nhờ các bạn khác bấm thử", score: 0, note: "0 điểm (Rủi ro cao): Vô tình phát tán đường link độc hại cho cả tập thể lớp." }
+        ]
+      },
+      {
+        id: "T8",
+        title: "T8: Tài khoản giả mạo giáo viên nhắn thu phí gấp trên nhóm",
+        desc: "Bạn thấy một tài khoản Zalo mới lấy đúng ảnh đại diện và họ tên của giáo viên chủ nhiệm nhắn tin yêu cầu học sinh nộp khoản phí gấp vào số tài khoản cá nhân lạ.",
+        options: [
+          { text: "A. Chuyển tiền ngay vì thấy đúng ảnh đại diện và họ tên cô giáo", score: 0, note: "0 điểm (Rủi ro cao): Ảnh đại diện và tên hiển thị mạng xã hội có thể bị sao chép chỉ trong vài giây." },
+          { text: "B. Không chuyển tiền nhưng im lặng không báo với lớp hay giáo viên", score: 1, note: "1 điểm (Trung bình): Bạn giữ được tiền nhưng các bạn khác trong lớp có thể mắc bẫy." },
+          { text: "C. Chụp màn hình bằng chứng, gọi điện xác minh trực tiếp với giáo viên, cảnh báo nhóm lớp và bấm Báo cáo tài khoản giả", score: 2, note: "2 điểm (An toàn tối ưu): Hành động kịp thời bảo vệ an toàn cho cả tập thể lớp." },
+          { text: "D. Nhắn tin chất vấn trực tiếp tài khoản giả mạo đó", score: 1, note: "1 điểm (Chưa đủ): Quan trọng nhất là cảnh báo ngay cho giáo viên và cả lớp biết trước khi có bạn chuyển tiền." }
+        ]
+      }
+    ];
+
+    function renderScenariosGrid() {
+      const container = document.getElementById("scenarios-container");
+      const prof = getActiveProfile();
+      const completed = (prof && prof.completedScenarios) || {};
+
+      container.innerHTML = SCENARIOS_T1_T8.map((sc, idx) => {
+        const picked = completed[sc.id] || null;
+        let statusBadge = '<span class="badge badge-slate">Chưa làm</span>';
+        if (picked) {
+          if (picked.score === 2) statusBadge = '<span class="badge badge-emerald">Đạt 2/2 điểm</span>';
+          else if (picked.score === 1) statusBadge = '<span class="badge badge-amber">Đạt 1/2 điểm</span>';
+          else statusBadge = '<span class="badge badge-rose">Đạt 0/2 điểm</span>';
+        }
+
+        return `
+          <div class="card stack-sm" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div class="stack-sm">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span class="badge badge-teal">${sc.id}</span>
+                ${statusBadge}
+              </div>
+              <h4 style="font-size: 0.92rem; font-weight: 700; color: var(--navy-900);">${sc.title}</h4>
+              <p style="font-size: 0.8rem; color: var(--slate-600);">${sc.desc}</p>
+            </div>
+
+            <div class="stack-sm" style="margin-top: 12px;">
+              ${sc.options.map((opt, oIdx) => {
+                const isChosen = picked && picked.choiceIdx === oIdx;
+                return `
+                  <button
+                    type="button"
+                    onclick="chooseScenarioOption('${sc.id}', ${idx}, ${oIdx})"
+                    class="scenario-option ${isChosen ? "chosen" : ""}"
+                  >${opt.text}</button>
+                `;
+              }).join("")}
+
+              ${picked ? `
+                <div class="alert-box ${picked.score === 2 ? "alert-emerald" : picked.score === 1 ? "alert-amber" : "alert-rose"}" style="margin-top: 6px;">
+                  <strong>Phản hồi Rubric:</strong> ${sc.options[picked.choiceIdx].note}
+                </div>
+              ` : ""}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function chooseScenarioOption(scId, scIdx, choiceIdx) {
+      const sc = SCENARIOS_T1_T8[scIdx];
+      const opt = sc.options[choiceIdx];
+
+      mutateActiveProfile(p => {
+        if (!p.completedScenarios) p.completedScenarios = {};
+        p.completedScenarios[scId] = { choiceIdx: choiceIdx, score: opt.score };
+
+        const sumPoints = Object.values(p.completedScenarios).reduce((acc, item) => acc + Number(item.score), 0);
+        p.behaviorScore = Math.round((sumPoints / 16) * 100);
+      });
+
+      renderScenariosGrid();
+      updateABGMetricsUI();
+    }
+
+    function resetScenarios() {
+      mutateActiveProfile(p => {
+        p.completedScenarios = {};
+        p.behaviorScore = null;
+      });
+      renderScenariosGrid();
+      updateABGMetricsUI();
+    }
+
+    /* ========================================================================
+       7. TAB 6: CHECKLIST HÀNH VI & CHUYỂN TAB
+       ======================================================================== */
+    function renderChallengesList() {
+      const prof = getActiveProfile();
+      const arr = (prof && Array.isArray(prof.completedChallenges)) ? prof.completedChallenges : [false, false, false, false, false];
+      let done = 0;
+      for (let i = 0; i < 5; i++) {
+        const el = document.getElementById("chk-habit-" + i);
+        if (el) el.checked = Boolean(arr[i]);
+        if (arr[i]) done++;
+      }
+      const badge = document.getElementById("challenge-badge");
+      if (badge) badge.textContent = `${done}/5 hoàn thành`;
+    }
+
+    function toggleHabit(idx) {
+      const el = document.getElementById("chk-habit-" + idx);
+      const checked = el ? el.checked : false;
+      mutateActiveProfile(p => {
+        if (!Array.isArray(p.completedChallenges)) p.completedChallenges = [false, false, false, false, false];
+        p.completedChallenges[idx] = checked;
+      });
+      renderChallengesList();
+    }
+
+    function switchTab(targetId) {
+      const allTabs = ["tab-chat", "tab-image", "tab-video", "tab-audio", "tab-practice", "tab-knowledge"];
+      allTabs.forEach(id => {
+        document.getElementById(id).classList.add("hidden");
+        document.getElementById("nav-" + id).classList.remove("active");
+      });
+      document.getElementById(targetId).classList.remove("hidden");
+      document.getElementById("nav-" + targetId).classList.add("active");
+    }
+
+    /* ========================================================================
+       8. KHỞI TẠO ỨNG DỤNG KHI TẢI TRANG
+       ======================================================================== */
+    window.addEventListener("DOMContentLoaded", () => {
+      refreshApiKeyStatusUI();
+      renderSavedCodesList();
+
+      const savedActive = localStorage.getItem(LS_ACTIVE_CODE);
+      if (savedActive) {
+        document.getElementById("anon-code-input").value = savedActive;
+      } else {
+        generateRandomAnonCode();
+      }
+      document.getElementById("auth-modal").classList.remove("hidden");
+    });
+  </script>
+</body>
+</html>
